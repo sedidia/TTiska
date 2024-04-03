@@ -1,0 +1,15 @@
+
+
+##  le projet ferula
+    name            : ferulafimbo
+    id du projet    : Firebase Realtime
+    se connecter à google
+        firebase login
+
+
+        199.36.158.100
+        hosting-site    =   ferulafimbo-sedidia
+
+    to add modification
+        npm run build
+        firebase deploy

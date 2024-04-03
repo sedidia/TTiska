@@ -1,0 +1,122 @@
+.bulletin_card{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 2em;
+}
+.bulletin{
+    width: 22cm;
+    height: 29.7cm;
+    padding: 2.5cm;
+    border-right: 2em solid rgba(248, 249, 250, 1);
+    font-family: 'Times New Roman', Times, serif;
+}
+.bulletin .identite_etudia div,
+.bulletin .donneesBulletins .elementEnseignement
+{
+    display: flex;flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.bulletin .headBulletin .logoUniv img{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+
+/* unite    elementEnseignement credits cotes */
+.unite,
+.elementEnseignementTitle,
+.elementEnseignement,
+.credits,
+.cotes{
+    font-size: 16px;
+    padding: 5px;
+}
+.bulletin_foot{
+    font-size: 12px;
+    padding: 5px;
+}
+
+
+.unite{
+    width: 2cm;
+}
+
+.elementEnseignementTitle,
+.elementEnseignement{
+    width: 10cm;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+}
+
+.credits{
+    width: 1cm;
+    border-right: 1px solid grey;
+}
+.cotes{
+    width: 5cm;
+}
+
+
+
+
+.notations div:nth-child(1){
+    width: 3cm;
+}
+.notations div:nth-child(2){
+    width: 5cm;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+}
+.notations div:nth-child(3){
+    width: 4cm;
+    border-right: 1px solid grey;
+}
+.notations div:nth-child(4){
+    width: 5cm;
+}
+/* unite    elementEnseignement credits cotes */
+
+
+.operationUpload{
+    width: 70%;
+    height: 70%;
+    position: relative;
+}
+.operationUpload i{
+    font-size: 40px;
+}
+.operationUpload i:nth-child(1){
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 60px;
+}
+.operationUpload i:nth-child(2){
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%,-0%);
+}
+.operationUpload i:nth-child(3){
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%,-100%);
+}
+.operationUpload i:nth-child(4){
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(-100%,-50%);
+}
+.operationUpload i:nth-child(5){
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%,-0%);
+}

@@ -1,0 +1,33 @@
+.processes{
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+.processes .appariteurProcess{
+    display: flex;
+    width: 400%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all .3s linear;
+}
+.processes .appariteurProcess.createCourse{
+    left: 0%;
+}
+.processes .appariteurProcess.createTeacher{
+    left: -100%;
+}
+.processes .appariteurProcess.createSemesters{
+    left: -200%;
+}
+.processes .appariteurProcess.programTeacher{
+    left: -300%;
+}
+
+.processes .appariteurProcess .createCourseProcess,
+.processes .appariteurProcess .createTeacherProcess,
+.processes .appariteurProcess .createSemestersProcess,
+.processes .appariteurProcess .programTeacherProcess{
+    width: 100%;
+}

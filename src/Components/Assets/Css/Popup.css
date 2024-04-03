@@ -1,0 +1,10 @@
+.whatch_video{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 400px;
+    width: 99999;
+    position: fixed;
+}
