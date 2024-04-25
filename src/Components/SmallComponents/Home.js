@@ -7,21 +7,20 @@ import Room from "../Booking/Room";
 // import LoginRegister from "../SmallComponents/LoginRegister";
 // import WhatchVideo from "../SmallComponents/WhatchVideo";
 
-const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeContent, setActiveContent} ) => {
+const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeContent, setActiveContent, etats, hangeMoveContentPage} ) => {
     
     return ( 
         <div className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}>
             <div>
 
                 <div className={darkMode ? "bg-dark" : "bg-light"}>
-
                     {/* header */}
                     <div className={darkMode ? "header position-relative bg-dark" : "header position-relative bg-light"}>
                         <div className="text_header">
                             <div className={darkMode ? "card p-2" : "card p-2"}>
                                 <div className={darkMode ? "bg-dark p-2 pt-4 pb-4 rounded" : "p-2 pt-4 pb-4 rounded"}>         
                                     <h3 className={darkMode ? "mb-4 text-light" : "mb-4 text-dark"} >Your company's application, The Cba for universities ?</h3>
-                                    <p className={darkMode ? "text-light" : "text-dark"}>What do you need ? <br></br> 
+                                    <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>What do you need ? <br></br> 
                                     Creation of applications for all kind of companies, Supply our solutions online and many other of our services.</p>
                                     <div>
                                         <button className={darkMode ? "dark_object mr-2 btn0 position-relative text-info " : "mr-2 btn0 position-relative"} onClick={() => handleWatchVideo("Contact", false, true, urls.sedidia1)} >
@@ -77,35 +76,67 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                         <div className="row">
                         
                             <div className="col-md-6 col-lg-4 overCard">
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                    <h4 className={darkMode ? "text-light" : "text-dark"}>« Tismoney »</h4>
-                                    <p className={darkMode ? "text-light" : "text-dark"}>Send your money from where you are to anyone accross us. </p>
-                                    {/* <Link className="btn btn-outline-info" to="#footer">» Order an application</Link> */}
-                                    <aside className="d-flex justify-content-between p-2">
-                                        <Link className="btn btn-outline-info" to="" onClick={() => setActiveContent("VIEW_BUILT")}> <i className="icon-money"></i> </Link>
-                                        <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sedidia1)}>» Whatch a video</Link>
+                                    <aside className="d-flex justify-content-center align-items-center">
+                                        <i className="icon-money text-danger p-2"></i>
+                                        <h4 className={darkMode ? "text-light" : "text-dark"}>Tismoney</h4>
                                     </aside>
+                                    <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sedidia1)}>» Whatch a video</Link>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4 overCard">
-                                <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                    <h4 className={darkMode ? "text-light" : "text-dark"}>« myCar »</h4>
-                                    <p className="d-flex justify-content-center align-items-center">Rent a car from where you are using your smartphone on TTiska. </p>
-                                    {/* <Link className="btn btn-outline-info" to="#footer">» Get started with us</Link> */}
-                                    <aside className="d-flex justify-content-between p-2">
-                                        <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("VIEW_TRAINING")}> <i className="icon-car"></i> </Link>
-                                        <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.the_street_called_mercy)}>» Whatch a video</Link>
+                                <p className="d-flex justify-content-center align-items-center p-2">Rent a car from where you are using your smartphone on TTiska. </p>
+                                <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}> 
+                                    <aside className="d-flex justify-content-center align-items-center">
+                                        <i className="icon-car text-danger p-2"></i>
+                                        <h4 className={darkMode ? "text-light" : "text-dark"}>TisCar </h4>
                                     </aside>
+                                    {/* <Link className="btn btn-outline-info" to="#footer">» Get started with us</Link> */}
+                                    <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.the_street_called_mercy)}>» Whatch a video</Link>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4 overCard MoverCard">
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Help your students to consult their result using our Cba solution.</p>
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                    <h4 className={darkMode ? "text-light" : "text-dark"}>« Cba online »</h4>
-                                    <p className={darkMode ? "text-light" : "text-dark"}>Help your students to consult their result using our Cba solution.</p>
-                                    <aside className="d-flex justify-content-between p-2">
-                                        <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("VIEW_SOLUTIONS")}> <i className="icon-handshake-o"></i> </Link>
-                                        <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
+                                    <aside className="d-flex justify-content-center align-items-center">
+                                        <i className="icon-handshake-o text-danger p-2"></i>
+                                        <h4 className={darkMode ? "text-light" : "text-dark"}>Cba online</h4>
                                     </aside>
+                                    <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
+                                </div>
+                            </div>
+                            <div className="col-md-6 col-lg-4 overCard MoverCard">
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Help your students to consult their courses schedule using our Cba solution.</p>
+                                <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                    <aside className="d-flex justify-content-center align-items-center">
+                                        <i className="icon-handshake-o text-danger p-2"></i>
+                                        <h4 className={darkMode ? "text-light" : "text-dark"}>TisTime online</h4>
+                                    </aside>
+                                    <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
+                                    {etats.isOnline && (etats.userType === "university" || etats.userType === "apparitor" || etats.userType === "student") ?
+                                    <Link className="btn btn-outline-info" to="#footer" onClick={() => hangeMoveContentPage("HomeUniv")}>Se fonctionalities</Link>
+                                    :""}
+                                </div>
+                            </div>
+                            <div className="col-md-6 col-lg-4 overCard MoverCard">
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Book a best room in our hotel from our plateform online, TTiska'll take care of you.</p>
+                                <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                    <aside className="d-flex justify-content-center align-items-center">
+                                        <i className="icon-home2 text-danger p-2"></i>
+                                        <h4 className={darkMode ? "text-light" : "text-dark"}>Hotel</h4>
+                                    </aside>
+                                    <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
+                                </div>
+                            </div>
+                            <div className="col-md-6 col-lg-4 overCard MoverCard">
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Do you need an application for your activity ? Contact us to realize your dream.</p>
+                                <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                    <aside className="d-flex justify-content-center align-items-center">
+                                        <i className="icon-handshake-o text-danger p-2"></i>
+                                        <h4 className={darkMode ? "text-light" : "text-dark"}>Applications</h4>
+                                    </aside>
+                                    <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
                                 </div>
                             </div>
 
@@ -117,7 +148,7 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                     
                     {/* <h4 className={darkMode ? "text-light pt-4 mt-4" : "text-dark pt-4 mt-4"}>||||| <A Services</h4>
                     <div className="container">
-                        <p className={darkMode ? "text-light" : "text-dark"}>
+                        <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>
                             Here are some of our services we offer, you can choose the one who interest your heart. <br />
                             «« ISKa »»
                         </p>

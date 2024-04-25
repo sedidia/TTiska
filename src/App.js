@@ -9,13 +9,18 @@ import './Components/Assets/Css/Popup.css';
 import './Components/Assets/Css/Ttime.css';
 
 import TTiska from './Components/Home/TTiska';
+import Auth from './Components/Home/Auth';
 import Notfound from './Components/SmallComponents/Notfound';
-import Cba from './Components/Cba/Cba';
+import Test from './Components/SmallComponents/Test';
+import HomeUniv from './Components/Cba/HomeUniv';
 import SendServer from './Components/Cba/SendServer';
 
 import TtimeHome from './Components/Ttime/TtimeHome';
+import Lire from './Components/Ttime/Lire';
+import EveryCollections from './Components/Ttime/EveryCollections';
 import Authent from './Components/SmallComponents/LoginRegister';
 import Copie from './Components/Copie/Copie';
+import SaveCourses from './Components/Ttime/Appariteur/SaveCourses';
 
 function App() {
   return (
@@ -30,11 +35,14 @@ function App() {
             <Route exact path={'/Copie'}>
               <Copie />
             </Route>
+            <Route exact path={'/Test'}>
+              <Test />
+            </Route>
             {/* teste */}
 
             {/* Cba solution */}
             <Route exact path={'/Cba'}>
-              <Cba />
+              <HomeUniv />
             </Route>
             <Route exact path={'/SendServer'}>
               <SendServer />
@@ -42,8 +50,20 @@ function App() {
             {/* Cba solution */}
 
             {/* T-Time solution */}
+            <Route exact path={'/SaveCourses'}>
+              <SaveCourses />
+            </Route>
+            <Route exact path={'/Every'}>
+              <EveryCollections />
+            </Route>
+            <Route exact path={'/Lire'}>
+              <Lire />
+            </Route>
             <Route exact path={'/Ttime'}>
               <TtimeHome />
+            </Route>
+            <Route exact path={'/Auth'}>
+              <Auth />
             </Route>
             {/* T-Time solution */}
 

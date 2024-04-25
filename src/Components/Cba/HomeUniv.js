@@ -5,29 +5,40 @@ import { Link } from "react-router-dom";
 // import axios from 'axios';
 import urls from "../Config/Config";
 
-import grilledel from "../../Server/Cba/Grilles/2024_Master1_Semestre1.xlsx"
+const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) => {
+    const [studentData, setStudentData] = useState([]);
+    const [columnIsMissing, setColumnIsMissing] = useState(false);
+    let indiceC = 0;
 
-const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent} ) => {
-    const [studentData, setStudentData] = useState(null);
+
+    const checkColumns = (data) => {
+        data.map(item => {
+            item.cours || item.option ? 
+            console.log(columnIsMissing) : setColumnIsMissing(true)
+        })
+    }
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(grilledel); // Chemin vers le fichier Excel
+            const response = await fetch(urls.courses_teachers ); // Chemin vers le fichier Excel
             const data = await response.arrayBuffer();
             const workbook = XLSX.read(data, { type: 'array' });
             const sheetName = workbook.SheetNames[0]; // Supposons que les données se trouvent dans la première feuille
             const sheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(sheet);
-
+    
             const gotStudent = jsonData.find(student => student.promotion === 'm1');
-            setStudentData(gotStudent);
+            setStudentData(jsonData);
+            // console.log(jsonData);
+            // setStudentData(gotStudent);
+            // console.log(gotStudent);
+            checkColumns(jsonData)
         };
-
         fetchData();
     }, []);
 
     return (
-        <div className='container bulletin_card d-flex justify-content-center align-items-center'>
+        <div className={darkMode ? 'container bulletin_card d-flex justify-content-center align-items-center text-light' : 'container bulletin_card d-flex justify-content-center align-items-center'}>
 
             {activeContent === "CbaExport" ?
                 <div className="d-flex justify-content-center align-items-center">
@@ -35,17 +46,24 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent} ) => {
                     <div className="col-md-12 col-lg-6 mb-4">
                         <div className={darkMode ? "dark_object rounded p-4 position-relative " : "bg-white rounded p-4 position-relative "}>
                             <div className="card-body pt-3">
-                            <h5 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Televerssement's grid / Paiement's List</h5>
-                            <p className={darkMode ? "text-light" : "text-dark"}>Please select the type of file you wanna upload on the server(A grid / A list) from your files explorer in order to allow your in order's students consulting their academic result using their smartphone.</p>
-                
-                            <form className="was-validated">
-                                <label htmlFor='liste' className="mb-3 d-flex justify-content-start align-items-center">Liste de paiment</label> 
-                                <div className="mb-3">
-                                    <input type="file"  id='liste' className={darkMode ? "bg-dark mb-3 form-control text-light" : "bg-light mb-3 form-control text-dark"} aria-label="file example" required />
-                                </div> 
+                                <h5 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Selectionnez votre fichier content les cours selon leurs section, filière et option.</h5>
+                                {columnIsMissing ?
+                                <p className={darkMode ? "text-light" : "text-dark"}>Il y a des colonnes manquantes dans le fichier excel selectionné.<br/>Votre fichier doit contenir plus de 11 colonnes suivantes : cours, section, option, promotion, teacherNumber, teacherName, semester, activeDate, classId, className, univId </p>
+                                :""}
+                                
+                                <form className="was-validated">
+                                    <label htmlFor='liste' className="mb-3 d-flex justify-content-start align-items-center">Liste de paiment</label> 
+                                    <div className="mb-3">
+                                        <input type="file"  id='liste' className={darkMode ? "bg-dark mb-3 form-control text-light" : "bg-light mb-3 form-control text-dark"} aria-label="file example" required />
+                                    </div> 
 
-                                <button type="submit" className="mt-3 btn btn-outline-info" >Continuer</button>
-                            </form>
+                                    <button type="submit" className="mt-3 btn btn-outline-info" >Continuer</button>
+                                </form>
+                                {/* {studentData.map(item => (
+                                    <div key={indiceC = indiceC+1} className="mb-3">
+                                        {item.cours}
+                                    </div> 
+                                ))} */}
                             </div>
                         </div>
                     </div>
@@ -221,20 +239,90 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent} ) => {
                         <div className="header_university d-flex justify-content-center align-items-center">
                             <div>
                                 <h4 className={darkMode ? "text-light" : "text-light"}>The university's page</h4>
-                                <h4 className={darkMode ? "text-light" : "text-light"}>Welcom to your page on TTiska !</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>{etats.univId}, welcom on TTiska for universities !</h4>
                             </div>
                         </div>
                     </div>
-                    <div className="p-4 row">
-                        <div className={darkMode ? "links_univ col-md-12 col-lg-6" : "links_univ col-md-12 col-lg-6"}>
-                            <Link to="/" className={darkMode ? "d-flex justify-content-start align-items-center" : "d-flex justify-content-start align-items-center"}>The ninetenn of March 2024 result</Link>
-                            <Link to="/" className={darkMode ? "d-flex justify-content-start align-items-center" : "d-flex justify-content-start align-items-center"}>Make a gaze (check) to our academics courses</Link>
-                        </div>
-                        <div className={darkMode ? "links_univ col-md-12 col-lg-6" : "links_univ col-md-12 col-lg-6"}>
-                            <Link to="/" className={darkMode ? "d-flex justify-content-start align-items-center" : "d-flex justify-content-start align-items-center"}>The ninetenn of March 2024 result</Link>
-                            <Link to="/" className={darkMode ? "d-flex justify-content-start align-items-center" : "d-flex justify-content-start align-items-center"}>The ninetenn of March 2024 result</Link>
-                            <Link to="/" className={darkMode ? "d-flex justify-content-start align-items-center" : "d-flex justify-content-start align-items-center"}>The ninetenn of March 2024 result</Link>
-                            
+                    <div className="p-4">
+                        <div>
+                            {etats.isOnline ?
+                            <div>
+                                {etats.userType === "university"?
+                                <div className='row'>     
+                                    {activeContent !== "CreateSemester"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("CreateSemester")}>I wanna create a semesters</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                    {activeContent !== "SaveClasses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveClasses")}>I wanna save a class</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                    {activeContent !== "SaveApparitor"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveApparitor")}>I wanna save an apparitor</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                    {activeContent !== "AttributeClasses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("AttributeClasses")}>I wanna manage attributions</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                </div>
+                                :""}
+                                {etats.userType === "apparitor"?
+                                <div className='row'>  
+                                    {activeContent !== "ConsultSectionsClasses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("ConsultSectionsClasses")}>Consult my section's classes</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                    {activeContent !== "ProgramSchedulsCourses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("ProgramSchedulsCourses")}>Program schedul's courses</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                    {activeContent !== "ProgramSemestersCourses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("ProgramSemestersCourses")}>Program semester's courses</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                    {activeContent !== "SaveCourses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveCourses")}>I wanna save courses</Link>
+                                        </div>
+                                    </div>
+                                    :""}
+                                </div>
+                                :""}
+                            </div>
+                            :
+                            <div className={darkMode ? "btn btn-outline-info" : "btn btn-outline-dark"} onClick={ () => setActiveContent("Auth") }>You're offline, Log in</div>
+                            }
                         </div>
                         
                     </div>

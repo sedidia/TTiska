@@ -13,6 +13,7 @@
     "bootstrap": "^5.3.1",
     "buffer": "^6.0.3",
     "chart.js": "^4.4.0",
+    "emailjs": "^4.0.3",
     "emailjs-com": "^3.2.0",
     "iconv-lite": "^0.6.3",
     "leaflet": "^1.9.4",
@@ -31,6 +32,7 @@
     "react-scripts": "^5.0.1",
     "react-to-print": "^2.14.13",
     "react-toastify": "^9.1.2",
+    "twilio": "^5.0.3",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5",
     "xlsx-to-json": "^0.3.0"

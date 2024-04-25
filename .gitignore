@@ -10,6 +10,8 @@
 
 # production
 /build
+/Excels
+/src/Components/Assets/Excels/
 
 # ignore videos
 /Videos

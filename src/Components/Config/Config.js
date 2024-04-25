@@ -20,9 +20,19 @@ import goodgrace_video from "../Assets/Videos/goodgrace_video.mp4";
 // const urlApi = "http://localhost/api-unilu/api/api-res";
 // const shareLink = "http://localhost:3000";
 
-import exGrille from "../../Server/Cba/Grilles/2024_Master1_Semestre1.xlsx";
+import exGrille from "../Assets/Excels/2024_Master1_Semestre1.xlsx";
+import courses_teachers from "../Assets/Excels/courses_teachers.xlsx";
+
+
+// routes api
+const urlApi = `http://localhost:3001`;
+// routes api
+
 
 const ulrs = {
+    // urls
+    urlApi,
+
     // images
     game, contact, home, baccool, b2, ines, logo_univ,
     // videos
@@ -30,7 +40,7 @@ const ulrs = {
     the_street_called_mercy, goodgrace_video,
 
     // excel
-    exGrille
+    exGrille, courses_teachers
 };
 
 export default ulrs;

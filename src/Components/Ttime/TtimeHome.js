@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import Appariteur from "./Appariteur/Appariteur";
+import Appariteur from "./Appariteur";
 import Student from "./Student/Student";
 import Teacher from "./Teacher/Teacher";
 
