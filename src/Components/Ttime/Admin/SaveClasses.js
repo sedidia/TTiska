@@ -4,72 +4,85 @@ import { Link } from "react-router-dom";
 import url from "../../Config/Config";
 import { useState } from "react";
 import SideLinks from "../SideLinks";
+// import SuccessAlert from './SuccessAlert';
+import Swal from 'sweetalert2';
 
 const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) => {
     const [classeName, setClasseName] = useState('');
 
-const [name, setName] = useState('');
-  const [section, setSection] = useState(null);
-  const [classes, setClasses] = useState([]);
-  const [univId, setUnivId] = useState(etats.univId);
+    const [name, setName] = useState('');
+    const [section, setSection] = useState(null);
+    const [classes, setClasses] = useState([]);
+    const [univId, setUnivId] = useState(etats.univId);
 
-  const handleChanges = (e, title) => {
-    setUnivId(etats.univId)
-    title === "name" ? setName(e.target.value) : console.log("Oops...");
-    const filtered = classes.filter(classe => 
-        classe.name.toLowerCase().includes( (title === "name" ? e.target.value: e.target.value).toLowerCase())
-    );
-    // setFilteredUsers(filtered);
-    if (filtered.length === 0) {
-      console.log('Aucune classe trouvé.');
-    } else {
-        console.log(filtered.name);
+    const handleSuccess = () => {
+
+        Swal.fire({
+            icon: 'success',
+            title: 'title Success!',
+            text: "text Success",
+            html: "Salut les gens",
+        });
+    };
+
+    const handleChanges = (e, title) => {
+        handleSuccess()
+        setUnivId(etats.univId)
+        title === "name" ? setName(e.target.value) : console.log("Oops...");
+        const filtered = classes.filter(classe => 
+            classe.name.toLowerCase().includes( (title === "name" ? e.target.value: e.target.value).toLowerCase())
+        );
+        // setFilteredUsers(filtered);
+        if (filtered.length === 0) {
+        console.log('Aucune classe trouvé.');
+        } else {
+            console.log(filtered.name);
+        }
+
+        // title === "name" ? setName(e.target.value) : setSection(e.target.value)
     }
 
-    // title === "name" ? setName(e.target.value) : setSection(e.target.value)
-  }
+    const handleAddUser = () => {
+        const newClass = { name, section, univId };
+        if(name !== ""){
+            setClasses([...classes, newClass]); 
+            setName('');
+            setSection('');
+            console.log(classes);
+            return
+        }
+        console.log("Veillez renseigner les champs obligatoires");
+    };
 
-  const handleAddUser = () => {
-    const newClass = { name, section, univId };
-    if(name !== ""){
-        setClasses([...classes, newClass]); 
-        setName('');
-        setSection('');
-        console.log(classes);
-        return
+    const handleSendClasses = () => {
+
+        if (classes.length > 0) {
+            fetch(`${url.urlApi}/saveClasses`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(classes),
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+            return
+        }
+        console.log("Vous ne pouvez pas envoyer un tableau sans objets...");
     }
-    console.log("Veillez renseigner les champs obligatoires");
-  };
 
-  const handleSendClasses = () => {
-
-      if (classes.length > 0) {
-        fetch(`${url.urlApi}/saveClasses`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(classes),
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-        return
-      }
-      console.log("Vous ne pouvez pas envoyer un tableau sans objets...");
-  }
-
-  const handleSendData = () => {
-    if(name !== ""){
-        handleAddUser()
+    const handleSendData = () => {
+        if(name !== ""){
+            handleAddUser()
+            handleSendClasses()
+            console.log(classes);
+            return
+        }
         handleSendClasses()
         console.log(classes);
-        return
-    }
-    handleSendClasses()
-    console.log(classes);
 
-  };
+    };
     return (
         <div className={darkMode ? "d-flex justify-content-center align-items-center mt-4 text-light container":"d-flex justify-content-center align-items-center mt-4 container"}>     
             <div className="row">     
@@ -356,3 +369,25 @@ export default SaveClasses;
 
 // export default NomsFilter;
 
+
+
+// import React from 'react';
+// import SuccessAlert from './SuccessAlert';
+
+// const MyComponent = () => {
+//     const handleSuccess = () => {
+//         // Perform your successful operation here
+//         console.log('Success!');
+
+//         // Display the success alert
+//         SuccessAlert({ message: 'Your operation was successful!' });
+//     };
+
+//     return (
+//         <div>
+//             <button onClick={handleSuccess}>Submit</button>
+//         </div>
+//     );
+// };
+
+// export default MyComponent;

@@ -94,7 +94,7 @@ const TTiska = () => {
     const handleLogout = () => {
         // disconnect the account
         setEtats({})
-        history.push('/');
+        setActiveContent("Auth")
         // setActiveContent("Home")
     }
 

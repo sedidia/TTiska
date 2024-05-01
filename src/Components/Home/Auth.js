@@ -180,16 +180,17 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
       console.log(numberANDusername.accessCode);
       mdp = numberANDusername.accessCode; 
     } else {
-      // setUserType(userNumberExiste.userType)
-      // setUnivId(userNumberExiste.univId)
       if(userNumberExiste){
+        setUserType(userNumberExiste.userType)
+        setUnivId(userNumberExiste.univId)
+        setSection(userNumberExiste.section)
         console.log("1: "+userNumberExiste);
-        // setStepRegisterContent("confirmAccount")
+        setStepRegisterContent("confirmAccount")
       }else{
         console.log("2: "+userNumberExiste);
         if(message !== "start"){
           console.log("3: "+userNumberExiste);
-          // setStepRegisterContent("chooseAcoutType")
+          setStepRegisterContent("chooseAcoutType")
           return
         }
       }
@@ -217,39 +218,46 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
       <div>
           <form className="was-validated">
             {enterAccessCode?
-                <div>                  
+                <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>      
+                  <h2>Please confirm it's you !</h2>
+                  <p className={"p-2"}>Please enter your access code to confirm it's you. </p>
+            
                   <label htmlFor="userNumber" className={accessCodeError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Votre code d'accès.*":"Pas de correspondance des codes d'accès.*"}</label>
                   <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="accessCode" name="accessCode" value={accessCode} onChange={ (e) => checkAccessCode(e.target.value) } placeholder="Votre code d'accès" /> 
                 </div>
                 :""}
             
             {stepRegisterContent === "homeReg" ?
-            <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>
-              <div className="card-body pt-3">
-                <h5 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Please tell a bit us about you !</h5>
-                {userNameError || numberError ?
-                <p>Veillez renseigner un nom d'utilisateur et un numero valide <br/> pour pouvoir vous connecter ou vous inscrire.</p>
-                :
-                <p>Merci d'avoir renseigner les nom d'utilisateur et numero valide <br/> Saisissez votre code d'accès pour acceder à la plateforme.</p>
-                }
-                <p className='text-danger'>{errorMessage}</p>
-                <Link to="/" onClick={(e) => sendEmail(e,"idris","sedidia01@gmail.com","salut !")}>Envoyer email</Link>
-                
-                <div>
-                  <label htmlFor="username" className={
-                    userNameError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}
-                  >{userNameError ? "Veuillez saisir un nnom d'utilisateur valide (+ de 4 caractères).":"Votre Nom d'utilisateur*"}</label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="username" name="username" value={username} onChange={validateUsername} placeholder="Your Username" /> 
+            <div>
+              {!enterAccessCode ?
+              <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>
+                <div className="card-body pt-3">
+                  <h5 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Please tell a bit us about you !</h5>
+                  {userNameError || numberError ?
+                  <p>Veillez renseigner un nom d'utilisateur et un numero valide <br/> pour pouvoir vous connecter ou vous inscrire.</p>
+                  :
+                  <p>Merci d'avoir renseigner les nom d'utilisateur et numero valide <br/> Saisissez votre code d'accès pour acceder à la plateforme.</p>
+                  }
+                  <p className='text-danger'>{errorMessage}</p>
+                  <Link to="/" onClick={(e) => sendEmail(e,"idris","sedidia01@gmail.com","salut !")}>Envoyer email</Link>
                   
-                  <label htmlFor="userNumber" className={numberError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Veuillez saisir un numéro de téléphone valide (10 chiffres).":"Votre Numero de telephone*"}</label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
-                </div>
+                  <div>
+                    <label htmlFor="username" className={
+                      userNameError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}
+                    >{userNameError ? "Veuillez saisir un nnom d'utilisateur valide (+ de 4 caractères).":"Votre Nom d'utilisateur*"}</label>
+                    <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="username" name="username" value={username} onChange={validateUsername} placeholder="Your Username" /> 
+                    
+                    <label htmlFor="userNumber" className={numberError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Veuillez saisir un numéro de téléphone valide (10 chiffres).":"Votre Numero de telephone*"}</label>
+                    <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
+                  </div>
 
-                
-                {stepRegisterContent === "homeReg" ?
-                  <button className='btn btn-outline-info mt-4' onClick={handleCheckSteps}>Follow the nest step / Login</button>
-                : ""}
+                  
+                  {stepRegisterContent === "homeReg" ?
+                    <button className='btn btn-outline-info mt-4' onClick={handleCheckSteps}>Follow the nest step / Login</button>
+                  : ""}
+                </div>
               </div>
+              :""}
             </div>
           
             : stepRegisterContent === "chooseAcoutType" ?
@@ -362,7 +370,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
                 </div>
                 :""}
                 
-                {userType === "doorman" || userType === "student" ?
+                {userType === "student" ?
                 <div>
                   <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>
 

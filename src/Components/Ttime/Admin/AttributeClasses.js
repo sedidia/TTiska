@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo  } from "react";
 import SideLinks from "../SideLinks";
 import { Link } from "react-router-dom";
 import urls from "../../Config/Config";
+import IsLoading from "../../SmallComponents/IsLoading";
 
 const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas} ) => {
     const [selectedClass, setSelectedClass] = useState("");
@@ -15,44 +16,41 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
 
     const [classeExist, setClasseExist] = useState(false);
     const [sectionExist, setSectionExist] = useState(false);
+    const [isSearching, setIsSearching] = useState(true);
     
 
     const ttiskaSync = async () => {
         console.log("salut sync");
+        setIsSearching(true)
         try {
-          const response = await fetch('http://localhost:3001/collections');
-          const data = await response.json();
-          setAllDatas(data);
+            const response = await fetch('http://localhost:3001/collections');
+            const data = await response.json();
+            setAllDatas(data);
 
-          data.classes.filter(classe => classe.univId === etats.univId).length === 0 ? setClassesEmpty(true) : setClassesEmpty(false)
-          data.users.filter(user => user.univId !== null).filter(user => user.univId === etats.univId).filter(user => user.userType === "doorman").length === 0 ? setSectionsEmpty(true) : setSectionsEmpty(false)
+            data.classes.filter(classe => classe.univId === etats.univId).length === 0 ? setClassesEmpty(true) : setClassesEmpty(false)
+            data.users.filter(user => user.univId !== null).filter(user => user.univId === etats.univId).filter(user => user.userType === "doorman").length === 0 ? setSectionsEmpty(true) : setSectionsEmpty(false)
+            setIsSearching(false)
 
-            //   init states
-            // setSelectedClass("")
-            // setSelectedSection("")
-            // setFoundedClasse([])
-            // setSections([])
-            // setUpdateClasse([])
-            // setClassesEmpty(false)
-            // setSectionsEmpty(false)
-            // setClasseExist(false)
-            // setSectionExist(false)
-            //   init states
+            setSelectedClass("")
+            setSelectedSection("")
         } catch (error) {
-          console.error('Erreur lors de la récupération des données :', error);
+            setIsSearching(false)
+            console.error('Erreur lors de la récupération des données :', error);
         }
     };
     useEffect(() => {
+        setIsSearching(false)
         allDatas.classes.filter(classe => classe.univId === etats.univId).length === 0 ? setClassesEmpty(true) : setClassesEmpty(false)
         allDatas.users.filter(user => user.univId !== null).filter(user => user.univId === etats.univId).filter(user => user.userType === "doorman").length === 0 ? setSectionsEmpty(true) : setSectionsEmpty(false)
     }, [])
     
     const handleSendClasses = () => {
+        setIsSearching(true)
         if (updateClasse.length > 0) {
             fetch(`${urls.urlApi}/saveClasses`, {
                 method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(updateClasse),
             })
@@ -61,7 +59,10 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                 console.log(data);
                 ttiskaSync()
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                setIsSearching(true)
+                console.error(error)
+            });
             return
         }
         console.log("Vous ne pouvez pas envoyer un tableau sans objets...");
@@ -124,7 +125,7 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
         ){
             setClasseExist(true)
         }else{
-            setClasseExist(true)
+            setClasseExist(false)
         }
 
         if(allDatas.users
@@ -136,7 +137,7 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
         ){
             setSectionExist(true)
         }else{
-            setSectionExist(true)
+            setSectionExist(false)
         }
 
         if(message !== "section"){
@@ -157,11 +158,16 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
     return (
         <div className={darkMode ? "container d-flex justify-content-center mt-4 text-light" : "container d-flex justify-content-center mt-4"}>
             <div>
-                <div className=" row">
+                <div className="row p-3">
                     {!classesEmpty && !sectionsEmpty ?
                     <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
                         <label htmlFor="selectedClass" className={"d-flex justify-content-between mt-4 mb-1"}>
-                            Classe
+                            <div className="p-0">
+                                
+                                <span>Classe</span>
+                                <span className="p-2 text-danger">{!classeExist && selectedClass !== "" ? "Aucune classe":""}</span> 
+                            </div>
+                            <Link to="" onClick={ () => hangeMoveContentPage("SaveClasses") } className="text-info">{!classeExist && selectedClass !== "" ? "Ajoutez en une":""}</Link> 
                         </label>
                         <input onChange={ (e) => handleSerchClasse(e, "classe") } className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="selectedClass" value={selectedClass} placeholder="The class name" required /> 
                         {selectedClass !== "" && foundedClasse.map(item => (
@@ -183,19 +189,23 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                         {classesEmpty ?
                         <div className="">
                             <div className="mb-4">Aucune classe enregistrée pour l'instant.</div>
-                            <Link to="" onClick={() => hangeMoveContentPage("SaveClasses")} className="btn btn-outline-info">Enregistrer une salle de classe.</Link>
+                            <Link to="" onClick={ () => hangeMoveContentPage("SaveClasses") } className="btn btn-outline-info">Enregistrer une salle de classe.</Link>
                         </div>
                         :""}
                         {sectionsEmpty ?
                         <div className="">
                             <div className="">Aucune section enregistrée pour l'instant.</div>
-                            <Link to="" onClick={() => hangeMoveContentPage("SaveClasses")} className="btn btn-outline-info">Enregistrer un appariteur de section.</Link>
+                            <Link to="" onClick={ () => hangeMoveContentPage("SaveClasses") } className="btn btn-outline-info">Enregistrer un appariteur de section.</Link>
                         </div>
                         :""}
-                        <Link to="" onClick={ttiskaSync} className="btn btn-outline-info mt-4">
 
-                        <i className="icon-sync"></i>
+                        {isSearching ?
+                        <IsLoading darkMode={darkMode} />
+                        :
+                        <Link to="" onClick={ttiskaSync} className="btn btn-outline-info mt-4">
+                            <i className="icon-sync"></i>
                         </Link>
+                        }
                     </div>
                     }
 
@@ -206,17 +216,22 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                             <h5>Selection</h5>
                             <h5 className="iconSorry">✔</h5>
                             <div className="">Selon votre selection, la salle {selectedClass} sera attribuée à <br/> la section {selectedSection}</div>
+                            {isSearching ?
+                            <IsLoading darkMode={darkMode} /> :
                             <Link onClick={handleSendClasses} to="" className="btn btn-primary mt-4"><i className="icon-sync"></i> Confirmer L'attribution</Link>
-                        
+                            }
                         </div>
                         :
                         <div>
                             <h5 className="iconSorry">😢</h5>
                             <div className="">Oooooops</div>
+                            {isSearching ?
+                            <IsLoading darkMode={darkMode} />
+                            :
                             <Link to="" onClick={ttiskaSync} className="btn btn-outline-info mt-4">
-
-                        <i className="icon-sync"></i>
-                        </Link>
+                                <i className="icon-sync"></i>
+                            </Link>
+                            }
                         </div>
                         }
                     </div>
