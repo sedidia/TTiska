@@ -2,17 +2,20 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import emailjs from "emailjs-com";
+import url from "../Config/Config";
 
 // ttiskaSync, users sont à faire passer en paramettre
 
 const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAllDatas } ) => {
   // the users collection
   const [users, setUsers] = useState([]);
+  const [enterAccessCode, setEnterAccessCode] = useState(false);
 
   const [stepRegisterContent, setStepRegisterContent] = useState("homeReg");
   const [errorMessage, setErrorMessage] = useState(null);
 
   // manage errors
+  const [accessCodeError, setAccessCodeError] = useState(true);
   const [numberError, setNumberError] = useState(true);
   const [userNameError, setUserNameError] = useState(true);
   const [emailAdressError, setEmailAdressError] = useState("empty");
@@ -22,7 +25,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
   const [ username, setUsername ] = useState("");
   const [ userNumber, setUserNumber ] = useState(0);
   const [ emailAdress, setEmailAdress ] = useState("");
-  const [ userType, setUserType ] = useState("normal"); // none, normal, company, university, apparitor, teacher, student
+  const [ userType, setUserType ] = useState("normal"); // none, normal, company, university, doormen, teacher, student
   const [ section, setSection ] = useState(null);
   const [ filiere, setFiliere ] = useState(null);
   const [ promotion, setPromotion ] = useState(null);
@@ -31,6 +34,8 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
   const [ rememberMe, setRememberMe ] = useState(false);
   const [ isOnline, setisOnline ] = useState(true);
   const [ accountConfirmed, setAccountConfirmed ] = useState(true);
+  let mdp = "";
+  const uniqueAccessCode = Math.random().toString(36).substr(2, 9);
 
   // fonction d'envoi de mail
   function sendEmail(e,to_name,to_email,message) {
@@ -62,7 +67,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
       
       setUsers(data.users); // collection "users"
 
-      console.log(data);
+      // console.log(data);
       setAllDatas(data);
       // console.log(data.startup_log);
       // setServerData(data);
@@ -78,14 +83,15 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
 
   useEffect(() => {
     ttiskaSync();
-    // setAccessCode("SK9LMZ03")
   }, []);
 
   const sendDataToServer = async () => {
+    // saveDoormen
     try {
       // const response = await axios({ method: 'post', url: 'http://localhost:3001/saveUsers', data: formData });
-      const response = await axios.post('http://localhost:3001/saveUsers', 
-      {
+      // const response = await axios.post(`${url.urlApi}/saveUsers`, 
+      const response = await axios.post(`${url.urlApi}/saveDoormen`, 
+      [{
           "username": username,
           "userNumber": userNumber,
           "emailAdress": emailAdress,
@@ -95,10 +101,10 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
           "promotion": promotion,
           "rememberMe": rememberMe,
           "isOnline": isOnline,
-          "accessCode": accessCode,
+          "accessCode": uniqueAccessCode,
           "univId": univId,
           "accountConfirmed": accountConfirmed
-        }
+        }]
       );
   
       if (response.status === 200) {
@@ -156,43 +162,66 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
       if (emailAdressError === "valid") {
         sendDataToServer()
       }
-
-
     }
   }
 
   const initActiveUser = (message, data) => {
-    const userExiste = data.find(user => user.userNumber === userNumber.toLocaleString);
+    
+    const userNumberExiste = data.find(user => user.userNumber === userNumber.toLocaleString());
     const numberANDusername = data.find(user => 
       user.userNumber === userNumber &&
-      user.username.toLocaleString() === username.toLocaleString()
+      (user.username !== null? user.username.toLocaleString(): "") === username.toLocaleString()
     );
     
-    setEtats(numberANDusername !== undefined ? userExiste : {});
+    setEtats(numberANDusername !== undefined ? userNumberExiste : {});
     if (numberANDusername && numberANDusername.accountConfirmed) {
       setEtats(numberANDusername);
-      if(numberANDusername.userType === "university" || numberANDusername.userType === "apparitor"|| numberANDusername.userType === "student"){
-        setActiveContent("HomeUniv")
-        return
-      }
-      setActiveContent("Home")
+      setEnterAccessCode(true) 
+      console.log(numberANDusername.accessCode);
+      mdp = numberANDusername.accessCode; 
     } else {
-      if(userExiste){
-        setStepRegisterContent("confirmAccount")
+      // setUserType(userNumberExiste.userType)
+      // setUnivId(userNumberExiste.univId)
+      if(userNumberExiste){
+        console.log("1: "+userNumberExiste);
+        // setStepRegisterContent("confirmAccount")
       }else{
+        console.log("2: "+userNumberExiste);
         if(message !== "start"){
-          setStepRegisterContent("chooseAcoutType")
+          console.log("3: "+userNumberExiste);
+          // setStepRegisterContent("chooseAcoutType")
           return
         }
       }
     }
   } 
+
+  const checkAccessCode = (etargetvalue) => {
+    setAccessCode(etargetvalue)
+    console.log(etats.accessCode +"==="+ etargetvalue);
+    if(etats.accessCode.toLowerCase() === etargetvalue.toLowerCase()){
+      if(etats.userType === "university" || etats.userType === "doorman"|| etats.userType === "student"){
+        setActiveContent("HomeUniv")
+        return
+      }
+      setActiveContent("Home")
+      return
+    }
+    setAccessCodeError(true)
+
+  }
   
 
   return (
     <div className={darkMode ? "container d-flex justify-content-center mt-4 text-light" : "container d-flex justify-content-center mt-4"}>
       <div>
           <form className="was-validated">
+            {enterAccessCode?
+                <div>                  
+                  <label htmlFor="userNumber" className={accessCodeError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Votre code d'accès.*":"Pas de correspondance des codes d'accès.*"}</label>
+                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="accessCode" name="accessCode" value={accessCode} onChange={ (e) => checkAccessCode(e.target.value) } placeholder="Votre code d'accès" /> 
+                </div>
+                :""}
             
             {stepRegisterContent === "homeReg" ?
             <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>
@@ -206,14 +235,17 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
                 <p className='text-danger'>{errorMessage}</p>
                 <Link to="/" onClick={(e) => sendEmail(e,"idris","sedidia01@gmail.com","salut !")}>Envoyer email</Link>
                 
+                <div>
+                  <label htmlFor="username" className={
+                    userNameError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}
+                  >{userNameError ? "Veuillez saisir un nnom d'utilisateur valide (+ de 4 caractères).":"Votre Nom d'utilisateur*"}</label>
+                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="username" name="username" value={username} onChange={validateUsername} placeholder="Your Username" /> 
+                  
+                  <label htmlFor="userNumber" className={numberError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Veuillez saisir un numéro de téléphone valide (10 chiffres).":"Votre Numero de telephone*"}</label>
+                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
+                </div>
 
-                <label htmlFor="username" className={
-                  userNameError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}
-                >{userNameError ? "Veuillez saisir un nnom d'utilisateur valide (+ de 4 caractères).":"Votre Nom d'utilisateur*"}</label>
-                <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="username" name="username" value={username} onChange={validateUsername} placeholder="Your Username" /> 
                 
-                <label htmlFor="userNumber" className={numberError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Veuillez saisir un numéro de téléphone valide (10 chiffres).":"Votre Numero de telephone*"}</label>
-                <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
                 {stepRegisterContent === "homeReg" ?
                   <button className='btn btn-outline-info mt-4' onClick={handleCheckSteps}>Follow the nest step / Login</button>
                 : ""}
@@ -257,15 +289,15 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
                 <div className="col-md-6 col-lg-4 p-2">
                   {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
                   <div className={
-                    userType === "apparitor" && darkMode ? "p-4  bg-primary checkType" :
-                    userType === "apparitor" && !darkMode ? "p-4 bg-dark text-light checkType" :
-                    userType !== "apparitor" && darkMode ? "p-4 dark_object checkType" 
-                    : "p-4 bg-white checkType"} onClick={() => setUserType("apparitor")}>
+                    userType === "doorman" && darkMode ? "p-4  bg-primary checkType" :
+                    userType === "doorman" && !darkMode ? "p-4 bg-dark text-light checkType" :
+                    userType !== "doorman" && darkMode ? "p-4 dark_object checkType" 
+                    : "p-4 bg-white checkType"} onClick={() => setUserType("doorman")}>
                     <aside className="d-flex justify-content-center align-items-center">
                       {/* <i className="icon-money text-danger p-2"></i> */}
-                      <h4>I'm an apparitor on my university</h4>
+                      <h4>I'm a doorman on my university</h4>
                     </aside>
-                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("apparitor")}>Create an apparitor's account</Link> */}
+                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("doorman")}>Create an doormen's account</Link> */}
                   </div>
                 </div>
                 <div className="col-md-6 col-lg-4 p-2">
@@ -298,7 +330,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
                 </div>
               </div>
             </div>
-            : stepRegisterContent === "confirmAccount" ?
+            : !enterAccessCode && stepRegisterContent === "confirmAccount" ?
             <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>
               <div className="card-body pt-3">
                 <h2 className='card-title pb-4'>Please tell a bit us about you !</h2>
@@ -317,7 +349,8 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
                 </label>
                 <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="email" id="emailAdress" value={emailAdress} name="emailAdress" onChange={validateEmail} placeholder="Your Email adress" />
 
-                {userType === "university" || userType === "apparitor" || userType === "teacher" || userType === "student" ?
+                {/* {userType === "university" || userType === "doorman" || userType === "teacher" || userType === "student" ? */}
+                {userType === "university" || userType === "student" ?
                 <div>
                   <label htmlFor="univId" className={"d-flex justify-content-between mt-4 mb-1"}>
 
@@ -329,7 +362,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
                 </div>
                 :""}
                 
-                {userType === "apparitor" || userType === "student" ?
+                {userType === "doorman" || userType === "student" ?
                 <div>
                   <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>
 

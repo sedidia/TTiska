@@ -9,11 +9,13 @@ const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) =
     const [classeName, setClasseName] = useState('');
 
 const [name, setName] = useState('');
-  const [section, setSection] = useState('');
+  const [section, setSection] = useState(null);
   const [classes, setClasses] = useState([]);
+  const [univId, setUnivId] = useState(etats.univId);
 
   const handleChanges = (e, title) => {
-    title === "name" ? setName(e.target.value) : setSection(e.target.value)
+    setUnivId(etats.univId)
+    title === "name" ? setName(e.target.value) : console.log("Oops...");
     const filtered = classes.filter(classe => 
         classe.name.toLowerCase().includes( (title === "name" ? e.target.value: e.target.value).toLowerCase())
     );
@@ -28,8 +30,8 @@ const [name, setName] = useState('');
   }
 
   const handleAddUser = () => {
-    const newClass = { name, section };
-    if(name !== "" && section !== ""){
+    const newClass = { name, section, univId };
+    if(name !== ""){
         setClasses([...classes, newClass]); 
         setName('');
         setSection('');
@@ -58,7 +60,7 @@ const [name, setName] = useState('');
   }
 
   const handleSendData = () => {
-    if(name !== "" && section !== ""){
+    if(name !== ""){
         handleAddUser()
         handleSendClasses()
         console.log(classes);
@@ -74,30 +76,32 @@ const [name, setName] = useState('');
                 <div className="col-md-12 col-lg-6">
                     <div className={darkMode ? "dark_object rounded p-4 position-relative " : "bg-white rounded p-4 position-relative "}>
                         <div className="card-body pt-3">
-                            <h2 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Enregistrer une salle de section.</h2>
+                            <h2 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Enregistrer une salle.</h2>
                             <p className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Veillez saisir le nom de la salle.</p>
+                            <form className="was-validated">
                             <label htmlFor="name" className={"d-flex justify-content-between mt-4 mb-1"}>
 
                                 {(name === null || name === "" || name === " ") ? "Le nom de la classe ne doit pas etre vide.":
                                 "Merci d'avoir saisi un nom de classe valide !"
                                 }
                             </label>
-                            <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="name" value={name} name="name" onChange={ (e) => handleChanges(e, "name") } placeholder="The class name" /> 
+                            <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="name" value={name} name="name" onChange={ (e) => handleChanges(e, "name") } placeholder="The class name" required /> 
                             
-                            <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>
+                            {/* <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>
 
                                 {(section === null || section === "" || section === " ") ? "Le nom de la section ne doit pas etre vide.":
                                 "Merci d'avoir saisi un nom de section valide !"
                                 }
                             </label>
-                            <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="section" value={section} name="section" onChange={ (e) => handleChanges(e, "section") } placeholder="The section's name" /> 
+                            <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="section" value={section} name="section" onChange={ (e) => handleChanges(e, "section") } placeholder="The section's name" required />  */}
 
                             <div className="d-flex mt-4">
                                 <button className="btn btn-outline-info" onClick={handleAddUser}>Add</button>
-                                {classes.length > 0 && name === "" && section === ""?
+                                {classes.length > 0 && name === "" ?
                                 <button className="btn btn-outline-info" onClick={handleSendData}>Send</button>
                                 :""}
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -279,3 +283,76 @@ export default SaveClasses;
 // };
 
 // export default UserForm;
+
+
+// filtre efficace
+// import React, { useState } from 'react';
+
+// const SelectOptions = () => {
+//   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+//   const [selectedOption, setSelectedOption] = useState('');
+
+//   const handleChange = (e) => {
+//     setSelectedOption(e.target.value);
+//   };
+
+//   return (
+//     <div>
+//       <select value={selectedOption} onChange={handleChange}>
+//         <option value="">Sélectionnez une option</option>
+//         {options.map((option) => (
+//           <option key={option} value={option}>
+//             {option}
+//           </option>
+//         ))}
+//       </select>
+//       <p>Option sélectionnée : {selectedOption}</p>
+//     </div>
+//   );
+// };
+
+// export default SelectOptions;
+
+
+// import React, { useState } from 'react';
+
+// const NomsFilter = () => {
+//   const noms = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
+//   const [nomFiltre, setNomFiltre] = useState('');
+//   const [nomSelectionne, setNomSelectionne] = useState('');
+
+//   const handleChange = (e) => {
+//     setNomFiltre(e.target.value);
+//   };
+
+//   const handleSelection = (nom) => {
+//     setNomSelectionne(nom);
+//     setNomFiltre(nom);
+//   };
+
+//   const nomsFiltres = noms.filter((nom) =>
+//     nom.toLowerCase().includes(nomFiltre.toLowerCase())
+//   );
+
+//   return (
+//     <div>
+//       <input
+//         type="text"
+//         value={nomFiltre}
+//         onChange={handleChange}
+//         placeholder="Entrez un nom..."
+//       />
+//       <ul>
+//         {nomsFiltres.map((nom) => (
+//           <li key={nom} onClick={() => handleSelection(nom)}>
+//             {nom}
+//           </li>
+//         ))}
+//       </ul>
+//       <p>Nom sélectionné : {nomSelectionne}</p>
+//     </div>
+//   );
+// };
+
+// export default NomsFilter;
+

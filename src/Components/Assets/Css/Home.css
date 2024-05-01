@@ -41,6 +41,9 @@ body::-webkit-scrollbar{
     width: 10px;
 }
 
+.iconSorry{
+    font-size: 100px;
+}
 .avatar_contact{
     width: 200px;
     height: 200px;

@@ -283,7 +283,7 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
                                     :""}
                                 </div>
                                 :""}
-                                {etats.userType === "apparitor"?
+                                {etats.userType === "doorman"?
                                 <div className='row'>  
                                     {activeContent !== "ConsultSectionsClasses"?
                                     <div className="col-md-6 col-lg-4 overCard">

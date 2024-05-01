@@ -1,6 +1,8 @@
 import urls from "../Config/Config";
 import { Link } from "react-router-dom";
 import Room from "../Booking/Room";
+import Publicity from "./Publicity";
+import { useState } from "react";
 // import React, { useState, useEffect } from "react";
 
 // import Publicity from "../SmallComponents/Publicity";
@@ -9,6 +11,7 @@ import Room from "../Booking/Room";
 
 const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeContent, setActiveContent, etats, hangeMoveContentPage} ) => {
     
+    let [historyData, setHistoryData] = useState("paincotidien");
     return ( 
         <div className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}>
             <div>
@@ -76,8 +79,8 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                         <div className="row">
                         
                             <div className="col-md-6 col-lg-4 overCard">
-                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                     <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
                                     <aside className="d-flex justify-content-center align-items-center">
                                         <i className="icon-money text-danger p-2"></i>
                                         <h4 className={darkMode ? "text-light" : "text-dark"}>Tismoney</h4>
@@ -86,8 +89,8 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4 overCard">
-                                <p className="d-flex justify-content-center align-items-center p-2">Rent a car from where you are using your smartphone on TTiska. </p>
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}> 
+                                <p className="d-flex justify-content-center align-items-center p-2">Rent a car from where you are using your smartphone on TTiska. </p>
                                     <aside className="d-flex justify-content-center align-items-center">
                                         <i className="icon-car text-danger p-2"></i>
                                         <h4 className={darkMode ? "text-light" : "text-dark"}>TisCar </h4>
@@ -96,9 +99,9 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                                     <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.the_street_called_mercy)}>» Whatch a video</Link>
                                 </div>
                             </div>
-                            <div className="col-md-6 col-lg-4 overCard MoverCard">
-                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Help your students to consult their result using our Cba solution.</p>
+                            <div className="col-md-6 col-lg-4 overCard">
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Help your students to consult their result using our Cba solution.</p>
                                     <aside className="d-flex justify-content-center align-items-center">
                                         <i className="icon-handshake-o text-danger p-2"></i>
                                         <h4 className={darkMode ? "text-light" : "text-dark"}>Cba online</h4>
@@ -106,22 +109,22 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                                     <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
                                 </div>
                             </div>
-                            <div className="col-md-6 col-lg-4 overCard MoverCard">
-                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Help your students to consult their courses schedule using our Cba solution.</p>
+                            <div className="col-md-6 col-lg-4 overCard ">
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Help your students to consult their courses schedule using our Cba solution.</p>
                                     <aside className="d-flex justify-content-center align-items-center">
                                         <i className="icon-handshake-o text-danger p-2"></i>
                                         <h4 className={darkMode ? "text-light" : "text-dark"}>TisTime online</h4>
                                     </aside>
                                     <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
-                                    {etats.isOnline && (etats.userType === "university" || etats.userType === "apparitor" || etats.userType === "student") ?
+                                    {etats.isOnline && (etats.userType === "university" || etats.userType === "doorman" || etats.userType === "student") ?
                                     <Link className="btn btn-outline-info" to="#footer" onClick={() => hangeMoveContentPage("HomeUniv")}>Se fonctionalities</Link>
                                     :""}
                                 </div>
                             </div>
-                            <div className="col-md-6 col-lg-4 overCard MoverCard">
-                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Book a best room in our hotel from our plateform online, TTiska'll take care of you.</p>
+                            <div className="col-md-6 col-lg-4 overCard">
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Book a best room in our hotel from our plateform online, TTiska'll take care of you.</p>
                                     <aside className="d-flex justify-content-center align-items-center">
                                         <i className="icon-home2 text-danger p-2"></i>
                                         <h4 className={darkMode ? "text-light" : "text-dark"}>Hotel</h4>
@@ -129,9 +132,9 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                                     <Link className="btn btn-outline-danger" to="#footer" onClick={() => handleWatchVideo("watch", true, true, urls.sauts)}>» Whatch a video</Link>
                                 </div>
                             </div>
-                            <div className="col-md-6 col-lg-4 overCard MoverCard">
-                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Do you need an application for your activity ? Contact us to realize your dream.</p>
+                            <div className="col-md-6 col-lg-4 overCard">
                                 <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Do you need an application for your activity ? Contact us to realize your dream.</p>
                                     <aside className="d-flex justify-content-center align-items-center">
                                         <i className="icon-handshake-o text-danger p-2"></i>
                                         <h4 className={darkMode ? "text-light" : "text-dark"}>Applications</h4>
@@ -143,6 +146,11 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                         </div>
                     </div>
                     {/* our services solutions */}
+
+                    {/* publicity */}
+                    <Publicity historyData={historyData}  />
+                    {/* publicity */}
+
 
                     {/* services and solutions */}
                     
@@ -196,7 +204,7 @@ const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeConte
                     {/* services and solutions */}
 
                     {/* Room */}
-                    <Room goBooking={goBooking} setGoBooking={setGoBooking} darkMode={darkMode} />
+                    {/* <Room goBooking={goBooking} setGoBooking={setGoBooking} darkMode={darkMode} /> */}
                     {/* Room */}
                 </div>
 

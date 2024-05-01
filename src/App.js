@@ -21,6 +21,7 @@ import EveryCollections from './Components/Ttime/EveryCollections';
 import Authent from './Components/SmallComponents/LoginRegister';
 import Copie from './Components/Copie/Copie';
 import SaveCourses from './Components/Ttime/Appariteur/SaveCourses';
+import Paincotidien from './Components/Paincotidien/Paincotidien';
 
 function App() {
   return (
@@ -67,9 +68,15 @@ function App() {
             </Route>
             {/* T-Time solution */}
 
+            {/* pain cotidien */}
+            <Route exact path={'/Auth'}>
+              <Auth />
+            </Route>
+            {/* pain cotidien */}
+
             {/* Auth */}
-            <Route exact path={'/Authent'}>
-              <Authent />
+            <Route exact path={'/paincotidien'}>
+              <Paincotidien />
             </Route>
             {/* Auth */}
             

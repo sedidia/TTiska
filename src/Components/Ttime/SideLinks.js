@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const SideLinks = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) => {
-    console.log(etats);
+    // console.log(etats);
     return (
         <div className="p-4">     
             <h2 className="d-flex mt-2">Others operations links </h2>

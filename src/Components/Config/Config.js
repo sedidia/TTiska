@@ -4,6 +4,7 @@ import game from "../Assets/Imgs/game.jpg";
 import ines from "../Assets/Imgs/ines.jpg";
 import b2 from "../Assets/Imgs/2.jpg";
 import contact from "../Assets/Imgs/contact.jfif";
+import homePainCotidien from "../Assets/Imgs/homePainCotidien.jpg";
 import home from "../Assets/Imgs/home.jfif";
 import baccool from "../Assets/Imgs/baccool.jfif";
 
@@ -34,7 +35,7 @@ const ulrs = {
     urlApi,
 
     // images
-    game, contact, home, baccool, b2, ines, logo_univ,
+    game, contact, homePainCotidien, home, baccool, b2, ines, logo_univ,
     // videos
     sauts, 
     the_street_called_mercy, goodgrace_video,
