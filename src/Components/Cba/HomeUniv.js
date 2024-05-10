@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 // import axios from 'axios';
 import urls from "../Config/Config";
 
-const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) => {
+const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats, allDatas} ) => {
     const [studentData, setStudentData] = useState([]);
     const [columnIsMissing, setColumnIsMissing] = useState(false);
     let indiceC = 0;
@@ -19,6 +19,7 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
     }
 
     useEffect(() => {
+        console.log(etats.univId);
         const fetchData = async () => {
             const response = await fetch(urls.courses_teachers ); // Chemin vers le fichier Excel
             const data = await response.arrayBuffer();
@@ -238,8 +239,14 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
                         <img src={urls.home} className={darkMode ? "text-light rounded" : "text-dark rounded"} alt='logo' />
                         <div className="header_university d-flex justify-content-center align-items-center">
                             <div>
-                                <h4 className={darkMode ? "text-light" : "text-light"}>The university's page</h4>
-                                <h4 className={darkMode ? "text-light" : "text-light"}>{etats.univId}, welcom on TTiska for universities !</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>La page "université".</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>{etats.username}, bienvenue sur Horaire pour les universités !</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>Votre université : {etats.univId}</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>Votre statut : {etats.userType === "doorman" ? "appariteur" : etats.userType === "student" ? "Etudiant" : etats.userType === "university" ? "Université" : etats.userType}</h4>
+                                {/* <h4 className={darkMode ? "text-light" : "text-light"}>The university's page</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>{etats.username}, welcom on TTiska for universities !</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>Your university : {etats.univId}</h4>
+                                <h4 className={darkMode ? "text-light" : "text-light"}>Your status is : {etats.userType}</h4> */}
                             </div>
                         </div>
                     </div>
@@ -248,36 +255,44 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
                             {etats.isOnline ?
                             <div>
                                 {etats.userType === "university"?
-                                <div className='row'>     
+                                <div className='row'> 
+                                    {activeContent !== "SaveCourses"?
+                                    <div className="col-md-6 col-lg-4 overCard">
+                                        <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveCourses")}>Je veux sauvegarder les cours</Link>
+                                        </div>
+                                    </div>
+                                    :""}    
                                     {activeContent !== "CreateSemester"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
-                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("CreateSemester")}>I wanna create a semesters</Link>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("CreateSemester")}>Je veux enregistrer les semestres</Link>
                                         </div>
                                     </div>
                                     :""}
                                     {activeContent !== "SaveClasses"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
-                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveClasses")}>I wanna save a class</Link>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveClasses")}>Je veux enregistrer les salles</Link>
                                         </div>
                                     </div>
                                     :""}
                                     {activeContent !== "SaveApparitor"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
-                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveApparitor")}>I wanna save an apparitor</Link>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveApparitor")}>Je veux enregistrer les appariteurs</Link>
                                         </div>
                                     </div>
                                     :""}
                                     {activeContent !== "AttributeClasses"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
-                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("AttributeClasses")}>I wanna manage attributions</Link>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("AttributeClasses")}>Je veux gérer les attributions</Link>
                                         </div>
                                     </div>
                                     :""}
@@ -288,7 +303,7 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
                                     {activeContent !== "ConsultSectionsClasses"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
                                             <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("ConsultSectionsClasses")}>Consult my section's classes</Link>
                                         </div>
                                     </div>
@@ -296,7 +311,7 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
                                     {activeContent !== "ProgramSchedulsCourses"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
                                             <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("ProgramSchedulsCourses")}>Program schedul's courses</Link>
                                         </div>
                                     </div>
@@ -304,19 +319,48 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats} ) 
                                     {activeContent !== "ProgramSemestersCourses"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
                                             <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("ProgramSemestersCourses")}>Program semester's courses</Link>
                                         </div>
                                     </div>
                                     :""}
-                                    {activeContent !== "SaveCourses"?
+                                </div>
+                                :""}
+                                {etats.userType === "teacher"?
+                                <div className='row'>  
+                                    {activeContent !== "CreateTime"?
                                     <div className="col-md-6 col-lg-4 overCard">
                                         <div className={darkMode ? "p-4 bg-dark" : "p-4 bg-light"}>
-                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p>
-                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("SaveCourses")}>I wanna save courses</Link>
+                                            <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Nous vous rendons le travail facile et rapide avec nos solutions numériques en ligne. </p>
+                                            <Link className="btn btn-outline-info" to="#footer" onClick={() => setActiveContent("CreateTime")}>Supply my time</Link>
                                         </div>
                                     </div>
                                     :""}
+                                </div>
+                                :""}
+                                {etats.userType === "student"?
+                                <div className='row mt-4'>  
+                                    <h2>Liste des cours programés</h2>
+                                    
+                                    {allDatas.courses
+                                    .filter(item => item.univId === etats.univId)
+                                    .filter(item => item.promotion === etats.promotion)
+                                    .filter(item => item.filiere === etats.filiere)
+                                    .filter(item => item.activeDate !== null)
+                                    .filter(item => item.activeDate !== "")
+                                    .map(item => (
+                                    <div key={item._id}>  
+                                        <li>{item.cours} : {item.className} {item.activeDate} </li>
+                                        
+                                        <li className='col-md-6 col-lg-4 p-2'>
+                                            <div className='card'>
+                                                <h4 className='d-flex p-2'>Cours : {item.cours}</h4>
+                                                <p className='d-flex p-2'>Salle : {item.className}</p>
+                                                <p className='d-flex p-2'>Date et heures : {item.activeDate} </p>
+                                            </div>
+                                        </li>
+                                    </div>
+                                    ))}
                                 </div>
                                 :""}
                             </div>

@@ -20,8 +20,8 @@ import Lire from './Components/Ttime/Lire';
 import EveryCollections from './Components/Ttime/EveryCollections';
 import Authent from './Components/SmallComponents/LoginRegister';
 import Copie from './Components/Copie/Copie';
-import SaveCourses from './Components/Ttime/Appariteur/SaveCourses';
-import Paincotidien from './Components/Paincotidien/Paincotidien';
+import SaveCourses from './Components/Ttime/Admin/SaveCourses';
+import Painquotidien from './Components/Painquotidien/Painquotidien';
 
 function App() {
   return (
@@ -75,8 +75,8 @@ function App() {
             {/* pain cotidien */}
 
             {/* Auth */}
-            <Route exact path={'/paincotidien'}>
-              <Paincotidien />
+            <Route exact path={'/Painquotidien'}>
+              <Painquotidien />
             </Route>
             {/* Auth */}
             

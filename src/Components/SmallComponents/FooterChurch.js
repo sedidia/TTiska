@@ -32,8 +32,7 @@ const FooterChurch = ( {seeMoreProvideProduct, setSeeMoreProvideProduct, darkMod
                     
                 <div className="text-center p-4">                    
                         © 2024 Copyright :
-                        <Link className="text-reset fw-bold d-flex justify-content-center align-items-center" to="/"> TTiska.com/</Link>
-                        LA SENTINELLE
+                        <Link className="text-reset fw-bold d-flex justify-content-center align-items-center" to="/"> TTiska.com/Lepaincotidien</Link>
                 </div>
             </div>
         </div> 

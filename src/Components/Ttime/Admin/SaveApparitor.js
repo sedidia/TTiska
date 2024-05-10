@@ -2,13 +2,15 @@
 import IsLoading from "../../SmallComponents/IsLoading";
 import { Link } from "react-router-dom";
 import url from "../../Config/Config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideLinks from "../SideLinks";
+import { isNumber } from "lodash";
 
-const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas} ) => {
+const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas, handleSuccess} ) => {
     const [classeName, setClasseName] = useState('');
 
     const [doormen, setDoormen] = useState([]);
+    const [sections, setSections] = useState([]);
 
     
     
@@ -16,12 +18,12 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
     const [section, setSection] = useState('');
     const [userType, setUserType] = useState('doorman');
     const [univId, setUnivId] = useState("");
-    const [userNumber, setUserNumber] = useState(0);
+    const [userNumber, setUserNumber] = useState("");
 
-    const [ username, setUsername ] = useState(null);
-    const [ emailAdress, setEmailAdress ] = useState(null);
-    const [ filiere, setFiliere ] = useState(null);
-    const [ promotion, setPromotion ] = useState(null);
+    const [ username, setUsername ] = useState("");
+    const [ emailAdress, setEmailAdress ] = useState("");
+    const [ filiere, setFiliere ] = useState("");
+    const [ promotion, setPromotion ] = useState("");
     const [ accessCode, setAccessCode ] = useState(null);
     const [ rememberMe, setRememberMe ] = useState(false);
     const [ isOnline, setisOnline ] = useState(false);
@@ -34,19 +36,18 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
 
     const validatePhoneNumber = (e) => {    
         setUserNumber(e.target.value);
-        setNumberError(/^\d{10}$/.test(e.target.value) ? false : true);
+        setNumberError(/^\d{9}$/.test(e.target.value) ? false : true);
     };
 
     const handleChanges = (e, title) => {
         setUnivId(etats.univId)
         setAccessCode(uniqueAccessCode)
-        console.log(uniqueAccessCode);
+        // console.log(uniqueAccessCode);
         title === "userNumber" ? validatePhoneNumber(e) : setSection(e.target.value)
     }
 
-    const handleAddUser = (e) => {
-        e.preventDefault()
-        // const newClass = { userNumber, section, userType, univId };
+    const handleAddUser = (message) => {
+        // e.preventDefault()
         const newClass = { 
             username, 
             userNumber, 
@@ -66,31 +67,43 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
 
             if (iFind) {
                 setNumberError(true);
-                console.log("Un objet avec la date spécifiée a été trouvé:", iFind);
+                setUserNumber("");
+                console.log("Un objet avec le numéro spécifié a été trouvé:", iFind);
+                if(message === "AddJust"){
+                    handleSuccess("Appariteur existant", "Un appariteur avec le numéro spécifié a été trouvé, veillez ajouter le nouveau appariteur avec un autre numéro inexistant")
+                }
             } else {
                 // setNumberError(false);
-                console.log("Aucun objet avec la date spécifiée n'a été trouvé.");
+                console.log("Aucun objet avec le numéro spécifié n'a été trouvé.");
+                console.log(message);
                 setDoormen([...doormen, newClass]); 
-                setUserNumber(0);
-                setSection('');
+                setSection("");
+                setUserNumber("");
                 console.log("Ajouté avec succès !");
+                if(message === "AddJust"){
+                    handleSuccess("Ajout d'un appariteur", "L'appariteur dont le numéro est "+userNumber+" a été ajouté pour la section '"+section+"'")
+                }
                 return;
             }
+            return
         }
         console.log("Veuillez renseigner tous les champs !");
     }
-
+    
     const handleSendClasses = () => {
         if (doormen.length > 0) {
             fetch(`${url.urlApi}/saveDoormen`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
             },
             body: JSON.stringify(doormen),
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                console.log(data)
+                handleSuccess("Enregistrement d'un appariteur", data.message)
+            })
             .catch(error => console.error(error));
             return
         }
@@ -100,7 +113,7 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
     const handleSendData = (e) => {
         e.preventDefault()
         if(section !== "" && !numberError){
-            handleAddUser()
+            handleAddUser("addAndSend")
             handleSendClasses()
             setDoormen([])
             console.log(doormen);
@@ -109,8 +122,27 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
         handleSendClasses()
         setDoormen([])
         console.log(doormen);
-
+        
     };
+
+    const addTransition = (e) => {
+        e.preventDefault()
+        if(section !== "" && !numberError){
+            handleAddUser("AddJust")
+            return
+        }
+    }
+
+    useEffect(() => {
+        const newData = allDatas.courses.reduce((acc, obj) => {
+          if (!acc[obj.nom]) {
+            acc[obj.nom] = Object.create(obj);
+          }
+          return acc;
+        }, {});
+    
+        setSections(Object.values(newData));
+      }, []);
 
     return (
         <div className={darkMode ? "d-flex justify-content-center align-items-center mt-4 text-light container":"d-flex justify-content-center align-items-center mt-4 container"}>     
@@ -123,7 +155,7 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
                             
                             <form className="was-validated">
                                 <label htmlFor="userNumber" className={"d-flex justify-content-between mt-4 mb-1"}>
-                                    {numberError ? "Le numéro de telephone doit contenir 10 chiffres.":
+                                    {numberError ? "Le numéro de telephone doit contenir 9 chiffres.":
                                     "Merci d'avoir entré un numéro valide !"
                                     }
                                 </label>
@@ -134,11 +166,31 @@ const SaveDoormen = ( {darkMode, hangeMoveContentPage, activeContent, etats, all
                                     "Merci d'avoir saisi un nom valide !"
                                     }
                                 </label>
-                                <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="section" value={section} name="section" onChange={ (e) => handleChanges(e, "section") } placeholder="The section's name" required /> 
-                                
+                                {/* <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>Quelle section gerera-t-il ?</label> */}
+                                <select name="section" value={section} onChange={ (e) => handleChanges(e, "section") } className="form-control">
+                                    <option value={""}>Veillez choisir une section</option>
+                                    {
+                                    allDatas.users
+                                    .filter(user => user.userType === "doorman")
+                                    .filter(user => user.section === "")
+                                    .length === 0 ?
+                                    
+                                    sections.map(item => (
+                                        <option key={item._id} value={item.section}>{item.section}</option>
+                                    ))
+                                    
+                                    : ""
+                                    
+                                    }
+                                    {/* {sections.map(item => (
+                                        <option key={item._id} value={item.section}>{item.section}</option>
+                                    ))} */}
+                                </select>
                                 
                                 <div className="d-flex mt-4">
-                                    <button className="btn btn-outline-info" onClick={handleAddUser}>Add</button>
+                                    {!numberError && userNumber !== "" && section !== "" ?
+                                    <button className="btn btn-outline-info" onClick={ addTransition }>Add</button>
+                                    :""}
                                     {doormen.length > 0 ?
                                     <button className="btn btn-outline-info" onClick={handleSendData}>Send</button>
                                     :""}

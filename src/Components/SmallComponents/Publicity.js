@@ -12,7 +12,7 @@ const Publicity = (historyData) => {
 
   const handleHistory = () => {
     console.log(historyData.historyData);
-    if(historyData === "paincotidien"){
+    if(historyData === "painquotidien"){
       history.push(`/${historyData}`)
     }
   }
@@ -20,7 +20,7 @@ const Publicity = (historyData) => {
       <div className="d-flex justify-content-center">
         <div className="row container pt-4 mb-4">
           <div className="col-md-12 col-lg-6 p-2">
-            <div className={historyData.historyData === "paincotidien" ? "alert alert-primary d-flex justify-content-center align-items-center":"alert alert-primary d-flex justify-content-center align-items-center"}>
+            <div className={historyData.historyData === "painquotidien" ? "alert alert-primary d-flex justify-content-center align-items-center":"alert alert-primary d-flex justify-content-center align-items-center"}>
               <div>
                   <h4>Application's need.</h4>
                 <p className="d-flex justify-content-center align-items-center">
@@ -32,7 +32,7 @@ const Publicity = (historyData) => {
               </div>
             </div>
           </div>
-          {historyData.historyData === "paincotidien" ?
+          {historyData.historyData === "painquotidien" ?
           <div className="col-md-12 col-lg-6 p-2">
             <div className="alert alert-primary d-flex justify-content-center align-items-center" role="alert">
               <div>

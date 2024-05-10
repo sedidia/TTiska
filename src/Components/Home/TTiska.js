@@ -9,7 +9,7 @@ import Auth from "./Auth";
 import Home from "../SmallComponents/Home";
 import DiscussBox from "../SmallComponents/DiscussBox";
 import WhatchAndView from "../SmallComponents/WhatchAndView";
-import Cba from "../Cba/HomeUniv";
+import HomeUniv from "../Cba/HomeUniv";
 // import WhatchAndView from "../SmallComponents/WhatchAndView";
 
 import { useHistory } from 'react-router-dom';
@@ -17,10 +17,14 @@ import SaveApparitor from "../Ttime/Admin/SaveApparitor";
 import SaveClasses from "../Ttime/Admin/SaveClasses";
 import CreateSemester from "../Ttime/Admin/CreateSemester";
 import AttributeClasses from "../Ttime/Admin/AttributeClasses";
-import SaveCourses from "../Ttime/Appariteur/SaveCourses";
+import SaveCourses from "../Ttime/Admin/SaveCourses";
 import ConsultSectionsClasses from "../Ttime/Appariteur/ConsultSectionsClasses";
 import ProgramSchedulsCourses from "../Ttime/Appariteur/ProgramSchedulsCourses";
 import ProgramSemestersCourses from "../Ttime/Appariteur/ProgramSemestersCourses";
+
+// notif
+import Swal from 'sweetalert2';
+import CreateTime from "../Ttime/Teacher/CreateTime";
 
 
 const TTiska = () => {
@@ -37,17 +41,47 @@ const TTiska = () => {
     const [blockedFonctionalities, setBlockedFonctionalities] = useState(false);
     
     const [darkMode, setDarkMode] = useState(false);
-    const [activeContent, setActiveContent] = useState("Home");
+    const [activeContent, setActiveContent] = useState("Auth");
 
     const [openWatch, setOpenWatch] = useState(false);
     const [videoKing, setVideoKing] = useState(null);
     const [isVideoOrNot, setIsVideoOrNot] = useState(false);
     const [notVideo, setNotVideo] = useState(null);
     const [goBooking, setGoBooking]= useState(false); 
+    const [isSearching, setIsSearching]= useState(false); 
+
+
+    const ttiskaSync = async (title, message) => {
+        console.log("salut rech");
+        setIsSearching(true)
+        try {
+            // Envoie de la requête à la route qui récupère toutes les collections de la base de données "local"
+            const response = await fetch('http://localhost:3001/collections');
+            const data = await response.json();
+            
+            setAllDatas(data);
+            setIsSearching(false)
+            handleSuccess(title, message)
+            
+        } catch (error) {
+            setIsSearching(false)
+            console.error('Erreur lors de la récupération des données :', error);
+        }
+      };
 
     // ttiska sync system
     // the users collection
     const [users, setUsers] = useState([]);
+
+    const handleSuccess = (title, message) => {
+
+        Swal.fire({
+            icon: 'success',
+            title: title,
+            text: "text Success",
+            html: message,
+        });
+    };
     
     useEffect(() => {
         // active OR not other fonctionnalities
@@ -115,7 +149,7 @@ const TTiska = () => {
                     </div>
                     <div className="mylinks">
                         {/* <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="">acces my profil</Link> */}
-                        {activeContent !== "HomeUniv" && (etats.userType === "university" || etats.userType === "doorman" || etats.userType === "student") ?
+                        {activeContent !== "HomeUniv" && (etats.userType === "university" || etats.userType === "doorman" || etats.userType === "teacher" || etats.userType === "student") ?
                             <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("HomeUniv")}>Go to the tome page</Link>
                         :""}
                        {etats.userType === "university" ?
@@ -283,14 +317,12 @@ const TTiska = () => {
                 </div>
                 {/* watch a video */}
 
-                <div className={darkMode ? "rootApp p-2 text-light d-flex justify-content-start pb-4 bg-dark" : "rootApp p-2 text-dark  d-flex justify-content-start pb-4 bg-light"}>
+                {/* <div className={darkMode ? "rootApp p-2 text-light d-flex justify-content-start pb-4 bg-dark" : "rootApp p-2 text-dark  d-flex justify-content-start pb-4 bg-light"}>
                     <div className="d-flex justify-content-between align-items-center container">
                         <Link to="#" onClick={() => hangeMoveContentPage("Home")} className="text-decoration-none text-info nameTT">The tribe of Iska</Link>
                         <Link to="#" onClick={() => hangeMoveContentPage("Home")} className={etats.isOnline ? "text-decoration-none text-info bg-primary isOnline" : "text-decoration-none text-info bg-light isOnline"}>  </Link>
-                        {/* <Link to="#" onClick={() => hangeMoveContentPage("Home")} className="tex-decoration-none text-info d-flex justify-content-start align-items-center">https//:www.TTiska.com</Link>
-                        /<Link to="#"className="tex-decoration-none text-info">{activeContent === "Home" || activeContent === "Contact" || activeContent === "HomeUniv" || activeContent === "CbaExport" || activeContent === "CbaView" ? activeContent : ""}</Link> */}
                     </div>
-                </div>
+                </div> */}
 
                 {/* Navbar */}
                 <div className={darkMode ? "navigation dark_object container" : "navigation bg-white container"}>
@@ -309,6 +341,13 @@ const TTiska = () => {
                         </div>
                         :
                         ""
+                        }
+                        {isSearching ?
+                        <IsLoading ></IsLoading>
+                        :
+                        <div className={darkMode ? "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 bg-dark" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 bg-dark"} onClick={ () => ttiskaSync("Rechargement de données", "Great, toutes les données on été chargées avec succès") }>
+                            <i className="icon-sync text-info"></i>
+                        </div>
                         }
 
                         {darkMode ?
@@ -333,8 +372,13 @@ const TTiska = () => {
                         }
 
                         {!etats.isOnline ?
-                        <div className={darkMode ? "search_btn_nav bg-dark text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info"} onClick={ () => handleCloseNavHomeOrWatchVideo("Auth") }>
-                            <div className={darkMode ? "text-light" : "text-dark"}>Sign-In</div>
+                        <div className="d-flex">
+                            <div className={darkMode ? "search_btn_nav bg-dark text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info"} onClick={ () => handleCloseNavHomeOrWatchVideo("Auth") }>
+                                <div className={darkMode ? "text-light" : "text-dark"}>Sign-In</div>
+                            </div>
+                            {/* <div className={darkMode ? "search_btn_nav bg-dark text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info"} onClick={ () => handleCloseNavHomeOrWatchVideo("Auth") }>
+                                <div className={darkMode ? "text-light" : "text-dark"}>Log-In</div>
+                            </div> */}
                         </div>
                         :
                         <div className={darkMode ? "search_btn_nav bg-dark text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 text-info"} onClick={ handleLogout }>
@@ -347,43 +391,46 @@ const TTiska = () => {
                 {/* Navbar */}
 
                 {activeContent === "Home" ?
-                <Home hangeMoveContentPage={hangeMoveContentPage} etats={etats} goBooking={goBooking} setGoBooking={setGoBooking} handleWatchVideo={handleWatchVideo} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <Home handleSuccess={handleSuccess} hangeMoveContentPage={hangeMoveContentPage} etats={etats} goBooking={goBooking} setGoBooking={setGoBooking} handleWatchVideo={handleWatchVideo} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 
                 // for the admin of the unniversity
                 : activeContent === "SaveApparitor" ?
-                <SaveApparitor allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <SaveApparitor handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "SaveClasses" ?
-                <SaveClasses allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <SaveClasses handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "CreateSemester" ?
-                <CreateSemester allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <CreateSemester handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "AttributeClasses" ?
-                <AttributeClasses  allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <AttributeClasses handleSuccess={handleSuccess}  allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 
                 // for apparitor 
                 : activeContent === "SaveCourses" ?
-                <SaveCourses allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
-                
+                <SaveCourses handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "ConsultSectionsClasses" ?
-                <ConsultSectionsClasses  hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <ConsultSectionsClasses handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas}  hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "ProgramSemestersCourses" ?
-                <ProgramSemestersCourses  hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <ProgramSemestersCourses handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas}  hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "ProgramSchedulsCourses" ?
-                <ProgramSchedulsCourses  hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
-
+                <ProgramSchedulsCourses handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas}  hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                
+                // for apparitor 
+                : activeContent === "CreateTime" ?
+                <CreateTime handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                
                 : activeContent === "Auth" ?
-                <Auth allDatas={allDatas} setAllDatas={setAllDatas} setEtats={setEtats} etats={etats} darkMode={darkMode}  users={users} setUsers={setUsers} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <Auth  handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} setEtats={setEtats} etats={etats} darkMode={darkMode}  users={users} setUsers={setUsers} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "Contact" ?
-                <DiscussBox darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <DiscussBox  handleSuccess={handleSuccess} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "HomeUniv" || activeContent === "CbaView" || activeContent === "CbaExport" ?
-                <Cba etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <HomeUniv  handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "TRAINING" || activeContent === "SOLUTIONS" || activeContent === "BUILT" || activeContent === "VIEW_TRAINING" || activeContent === "VIEW_SOLUTIONS" || activeContent === "VIEW_BUILT" ?
-                <WhatchAndView darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <WhatchAndView  handleSuccess={handleSuccess} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : ""
                 }
             </div>
             }
             
-            <Footer darkMode={darkMode} setDarkMode={setDarkMode} />
+            {/* <Footer darkMode={darkMode} setDarkMode={setDarkMode} /> */}
         </div>
     )
 }

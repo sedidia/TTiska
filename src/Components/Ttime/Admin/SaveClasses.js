@@ -5,36 +5,28 @@ import url from "../../Config/Config";
 import { useState } from "react";
 import SideLinks from "../SideLinks";
 // import SuccessAlert from './SuccessAlert';
-import Swal from 'sweetalert2';
 
-const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) => {
+const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats, handleSuccess, allDatas} ) => {
     const [classeName, setClasseName] = useState('');
 
     const [name, setName] = useState('');
-    const [section, setSection] = useState(null);
+    const [section, setSection] = useState("");
     const [classes, setClasses] = useState([]);
     const [univId, setUnivId] = useState(etats.univId);
+    const [existClass, setExistClass] = useState(0);
 
-    const handleSuccess = () => {
-
-        Swal.fire({
-            icon: 'success',
-            title: 'title Success!',
-            text: "text Success",
-            html: "Salut les gens",
-        });
-    };
 
     const handleChanges = (e, title) => {
-        handleSuccess()
+        setExistClass(allDatas.classes.filter(item => item.name.toLowerCase() === e.target.value.toLowerCase()).length);
+
         setUnivId(etats.univId)
         title === "name" ? setName(e.target.value) : console.log("Oops...");
         const filtered = classes.filter(classe => 
-            classe.name.toLowerCase().includes( (title === "name" ? e.target.value: e.target.value).toLowerCase())
+            classe.name.toLowerCase().includes( e.target.value.toLowerCase() )
         );
         // setFilteredUsers(filtered);
         if (filtered.length === 0) {
-        console.log('Aucune classe trouvé.');
+            console.log('Aucune classe trouvé.');
         } else {
             console.log(filtered.name);
         }
@@ -49,6 +41,7 @@ const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) =
             setName('');
             setSection('');
             console.log(classes);
+            handleSuccess("Ajout d'une salle de classe", "La salle de classe a été enregistrée et attend son envoi au serveur !")
             return
         }
         console.log("Veillez renseigner les champs obligatoires");
@@ -65,7 +58,10 @@ const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) =
             body: JSON.stringify(classes),
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                console.log(data)
+                handleSuccess("Enregistrement dans la base des données", data.message)
+            })
             .catch(error => console.error(error));
             return
         }
@@ -100,20 +96,22 @@ const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats} ) =
                             </label>
                             <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="name" value={name} name="name" onChange={ (e) => handleChanges(e, "name") } placeholder="The class name" required /> 
                             
-                            {/* <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>
-
-                                {(section === null || section === "" || section === " ") ? "Le nom de la section ne doit pas etre vide.":
-                                "Merci d'avoir saisi un nom de section valide !"
-                                }
-                            </label>
-                            <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="section" value={section} name="section" onChange={ (e) => handleChanges(e, "section") } placeholder="The section's name" required />  */}
-
                             <div className="d-flex mt-4">
+                                {existClass === 0 ?
                                 <button className="btn btn-outline-info" onClick={handleAddUser}>Add</button>
+                                :""}
                                 {classes.length > 0 && name === "" ?
                                 <button className="btn btn-outline-info" onClick={handleSendData}>Send</button>
                                 :""}
                             </div>
+
+                            {existClass !== 0?
+                            <div className="mt-4">
+                                <div className={"border p-1 m-2 text-danger"}>
+                                    {`Ooops, ${existClass} salle(s) de classe portant le nom "${name}" existe(nt) déjà`}
+                                </div> 
+                            </div>
+                            :""}
                             </form>
                         </div>
                     </div>

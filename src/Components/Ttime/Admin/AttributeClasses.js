@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import urls from "../../Config/Config";
 import IsLoading from "../../SmallComponents/IsLoading";
 
-const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas} ) => {
+const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas, handleSuccess} ) => {
     const [selectedClass, setSelectedClass] = useState("");
     const [selectedSection, setSelectedSection] = useState("");
     const [foundedClasse, setFoundedClasse] = useState([]);
@@ -17,14 +17,21 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
     const [classeExist, setClasseExist] = useState(false);
     const [sectionExist, setSectionExist] = useState(false);
     const [isSearching, setIsSearching] = useState(true);
+    const [sendAbled, setSendAbled] = useState(false);
     
 
-    const ttiskaSync = async () => {
-        console.log("salut sync");
+    const ttiskaSync = (title, message) => {
         setIsSearching(true)
-        try {
-            const response = await fetch('http://localhost:3001/collections');
-            const data = await response.json();
+        fetch(`${urls.urlApi}/collections`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify(updateClasse),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
             setAllDatas(data);
 
             data.classes.filter(classe => classe.univId === etats.univId).length === 0 ? setClassesEmpty(true) : setClassesEmpty(false)
@@ -33,10 +40,12 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
 
             setSelectedClass("")
             setSelectedSection("")
-        } catch (error) {
+            handleSuccess(title, message)
+        })
+        .catch (error => {
             setIsSearching(false)
             console.error('Erreur lors de la récupération des données :', error);
-        }
+        })
     };
     useEffect(() => {
         setIsSearching(false)
@@ -57,7 +66,8 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                ttiskaSync()
+                setSendAbled(false)
+                ttiskaSync("Confirmation d'attribution", data.message)
             })
             .catch(error => {
                 setIsSearching(true)
@@ -70,89 +80,39 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
 
     const handleSerchClasse = (e, message) => {
         setSelectedClass(e.target.value)
-        if(allDatas.classes
-            .filter(classe => classe.section === null)
-            .filter(classe => classe.name.toLowerCase() === e.target.value.toLowerCase())
-            .filter(classe => classe.univId.toLowerCase() === etats.univId.toLowerCase())
-            .length > 0
-        ){
+        
+        if(e.target.value !== "" && selectedSection !== ""){
             setClasseExist(true)
         }else{
             setClasseExist(false)
         }
-        
-        setFoundedClasse(
-            allDatas.classes
-            .filter(classe => classe.section === null)
-            .filter(classe => classe.univId.toLowerCase() === etats.univId.toLowerCase())
-            .filter(classe => classe.name.toLowerCase().includes(message === "classe" ? e.target.value.toLowerCase() : "AAAWWW"))
-        );  
         
     }
     const handleSerchSection = (e, message) => {
+        console.log(selectedClass);
         setSelectedSection(e.target.value)
-        if(allDatas.users
-            .filter(user => user.univId !== null)
-            .filter(user => user.section !== null)
-            .filter(user => user.userType === "doorman")
-            .filter(user => user.univId.toLowerCase() === etats.univId.toLowerCase())
-            .filter(user => user.section.toLowerCase() === e.target.value.toLowerCase()).length > 0
-        ){
+        
+        if(e.target.value !== "" && selectedClass !== ""){
             setSectionExist(true)
         }else{
             setSectionExist(false)
         }
-        
-        setSections(
-            allDatas.users
-            .filter(user => user.univId !== null)
-            .filter(user => user.section !== null)
-            .filter(user => user.userType === "doorman")
-            .filter(user => user.univId.toLowerCase() === etats.univId.toLowerCase())
-            .filter(user => user.section.toLowerCase().includes(message === "section" ? e.target.value.toLowerCase() : "AAAWWW") )
-        );  
     }
     
-    const handleClassSelected = (e, message, item) => {
+    const handleAddClasse = (e) => {
         e.preventDefault()
-        message === "section" ? setSelectedSection(item.section) : setSelectedClass(item.name)
-
-        if(allDatas.classes
-            .filter(classe => classe.section === null)
-            .filter(classe => classe.name.toLowerCase() === selectedClass.toLowerCase())
-            .filter(classe => classe.univId.toLowerCase() === etats.univId.toLowerCase())
-            .length > 0
-        ){
-            setClasseExist(true)
-        }else{
-            setClasseExist(false)
-        }
-
-        if(allDatas.users
-            .filter(user => user.univId !== null)
-            .filter(user => user.section !== null)
-            .filter(user => user.userType === "doorman")
-            .filter(user => user.univId.toLowerCase() === etats.univId.toLowerCase())
-            .filter(user => user.section.toLowerCase() === selectedSection.toLowerCase()).length > 0
-        ){
-            setSectionExist(true)
-        }else{
-            setSectionExist(false)
-        }
-
-        if(message !== "section"){
-            setUpdateClasse([
-                {
-                    "name": item.name,
-                    "section": selectedSection,
-                    "univId": item.univId,
-                }
-            ]);
-        }
-
-        
-        setFoundedClasse([])
-        setSections([])
+        setSendAbled(true)
+        setUpdateClasse([
+            ...updateClasse,
+            {
+                "name": selectedClass,
+                "section": selectedSection,
+                "univId": etats.univId,
+            }
+        ]);
+        setSelectedClass("")
+        console.log(updateClasse);
+        handleSuccess("Ajout réussi", "Attribution éffectuée avec succès. Cliquez sur le bouton de confirmation pour enregistrer les modification dans la base des données.")
     }
 
     return (
@@ -161,6 +121,7 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                 <div className="row p-3">
                     {!classesEmpty && !sectionsEmpty ?
                     <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
+                        <p>Veillez écrire les noms de la classe et de la section à la main pour une meillere confirmation !</p>
                         <label htmlFor="selectedClass" className={"d-flex justify-content-between mt-4 mb-1"}>
                             <div className="p-0">
                                 
@@ -169,19 +130,39 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                             </div>
                             <Link to="" onClick={ () => hangeMoveContentPage("SaveClasses") } className="text-info">{!classeExist && selectedClass !== "" ? "Ajoutez en une":""}</Link> 
                         </label>
-                        <input onChange={ (e) => handleSerchClasse(e, "classe") } className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="selectedClass" value={selectedClass} placeholder="The class name" required /> 
-                        {selectedClass !== "" && foundedClasse.map(item => (
-                        <Link className="d-flex text-decoration-none" to="" key={item._id} onClick={(e) => handleClassSelected(e, "classe", item)}>{item.name}</Link>
-                        ))} 
                         
+                        <select name="selectedClass" value={selectedClass} onChange={ (e) =>  handleSerchClasse(e, "classe") } className="form-control">
+                            <option value={""}>Veillez choisir une classe</option>
+
+                            {allDatas.classes
+                            .filter(classe => classe.section === "")
+                            .filter(classe => classe.univId.toLowerCase() === etats.univId.toLowerCase())
+                            .filter(classe => classe.name.toLowerCase().includes( selectedClass.toLowerCase() ))
+                            .map(item => (
+                                <option key={item._id} value={item.name}>{item.name}</option>
+                            ))}
+                        </select>
                         
                         <label htmlFor="selectedSection" className={"d-flex justify-content-between mt-4 mb-1"}>
                             Sections/Doormen
                         </label>
-                        <input onChange={ (e) => handleSerchSection(e, "section") } className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="selectedSection" value={selectedSection} placeholder="The section's name" required /> 
-                        {selectedSection !== "" && sections.map(item => (
-                        <Link className="d-flex text-decoration-none p-2" to="" key={item._id} onClick={(e) => handleClassSelected(e, "section", item)}>Section: {item.section} Appariteur: {item.username === null ? "Non confirmé":item.username}</Link>
-                        ))} 
+                        <select name="selectedSection" value={selectedSection} onChange={ (e) => handleSerchSection(e, "section") } className="form-control">
+                            <option value={""}>Veillez choisir la section</option>
+
+                            {allDatas.users
+                            .filter(user => user.univId !== null)
+                            .filter(user => user.section !== null)
+                            .filter(user => user.userType === "doorman")
+                            .filter(user => user.univId.toLowerCase() === etats.univId.toLowerCase())
+                            .filter(user => user.section.toLowerCase().includes( selectedSection.toLowerCase() ))
+                            .map(item => (
+                                <option key={item._id} value={item.section}>{item.section}</option>
+                            ))}
+                        </select>
+
+                        {selectedClass !== "" && selectedSection !== "" ?
+                        <Link to="" onClick={ handleAddClasse } className="btn btn-outline-info mt-4">Ajouter une salle de classe.</Link>
+                        :""}
                     </div>
                     :
                     <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
@@ -195,14 +176,14 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                         {sectionsEmpty ?
                         <div className="">
                             <div className="">Aucune section enregistrée pour l'instant.</div>
-                            <Link to="" onClick={ () => hangeMoveContentPage("SaveClasses") } className="btn btn-outline-info">Enregistrer un appariteur de section.</Link>
+                            <Link to="" onClick={ () => hangeMoveContentPage("SaveApparitor") } className="btn btn-outline-info">Enregistrer un appariteur de section.</Link>
                         </div>
                         :""}
 
                         {isSearching ?
                         <IsLoading darkMode={darkMode} />
                         :
-                        <Link to="" onClick={ttiskaSync} className="btn btn-outline-info mt-4">
+                        <Link to="" onClick={ () => ttiskaSync("Rechargement de données", "Great, toutes les données on été chargées avec succès") } className="btn btn-outline-info mt-4">
                             <i className="icon-sync"></i>
                         </Link>
                         }
@@ -211,7 +192,7 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
 
                     {!classesEmpty && !sectionsEmpty ?
                     <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
-                        {classeExist && sectionExist && selectedClass !== "" && selectedSection !== "" ?
+                        {sendAbled ?
                         <div>
                             <h5>Selection</h5>
                             <h5 className="iconSorry">✔</h5>
@@ -228,7 +209,7 @@ const AttributeClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats
                             {isSearching ?
                             <IsLoading darkMode={darkMode} />
                             :
-                            <Link to="" onClick={ttiskaSync} className="btn btn-outline-info mt-4">
+                            <Link to="" onClick={ () => ttiskaSync("Rechargement de données", "Great, toutes les données on été chargées avec succès") } className="btn btn-outline-info mt-4">
                                 <i className="icon-sync"></i>
                             </Link>
                             }

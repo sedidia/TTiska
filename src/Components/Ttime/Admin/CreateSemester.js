@@ -5,7 +5,7 @@ import url from "../../Config/Config";
 import { useState } from "react";
 import SideLinks from "../SideLinks";
 
-const CreateSemesters = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas} ) => {
+const CreateSemesters = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas, handleSuccess} ) => {
     const [classeName, setClasseName] = useState('');
 
     const [startDate, setStartDate] = useState('');
@@ -39,6 +39,7 @@ const CreateSemesters = ( {darkMode, hangeMoveContentPage, activeContent, etats,
 
                 if (iFind) {
                     console.log("Un objet avec la date spécifiée a été trouvé:", iFind);
+                    handleSuccess("Echec d'ajout", "L'ajout de l'appariteur a échoué, un semestre avec la date spécifiée a été trouvé ")
                 } else {
                     console.log("Aucun objet avec la date spécifiée n'a été trouvé.");
                     console.log('Insertion...');
@@ -47,16 +48,18 @@ const CreateSemesters = ( {darkMode, hangeMoveContentPage, activeContent, etats,
                     setStartDate('');
                     setEndDate('');
                     console.log(classes);
+                    handleSuccess("Ajout réussi", "Appariteur ajouté avec succès, cliqué sur le outon d'envoi pour l'enregistrer dans la base des données.")
                     return;
                 }
-
+                
                 // if (iFind.length === 0) {
                 // } else {
-                //     console.log(iFind.startDate);
+                    //     console.log(iFind.startDate);
                 // }
 
             } else {
-                console.log("Veuillez saisir une date de fin ultérieure à la date de début.");
+                console.log("Veuillez saisir une date de fin inferieure à la date de début.");
+                handleSuccess("Valuers invalides", "Veuillez saisir une date de fin ultérieure à la date de début.")
                 return;
             }
         }
@@ -71,9 +74,12 @@ const CreateSemesters = ( {darkMode, hangeMoveContentPage, activeContent, etats,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(classes),
+        })
+        .then(response => response.json())
+        .then(data => {
+                handleSuccess("Enregistrement réussi", "Semestre enregistré avec succès, Merci de cliquer sur le bouton OK pour fermer cette boite de dialogue.")
+                console.log(data)
             })
-            .then(response => response.json())
-            .then(data => console.log(data))
             .catch(error => console.error(error));
             return
         }

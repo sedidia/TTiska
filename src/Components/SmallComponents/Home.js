@@ -11,7 +11,7 @@ import { useState } from "react";
 
 const Home = ( {goBooking, setGoBooking, handleWatchVideo, darkMode, activeContent, setActiveContent, etats, hangeMoveContentPage} ) => {
     
-    let [historyData, setHistoryData] = useState("paincotidien");
+    let [historyData, setHistoryData] = useState("painquotidien");
     return ( 
         <div className={darkMode ? "bg-dark text-light" : "bg-light text-dark"}>
             <div>

@@ -8,35 +8,34 @@ import urls from "../../Config/Config";
 import axios from "axios";
 import SideLinks from '../SideLinks';
 
-const SaveCourses = ( {darkMode, setDarkMode, activeContent, setActiveContent, hangeMoveContentPage, etats} ) => {
+const SaveCourses = ( {darkMode, setDarkMode, activeContent, setActiveContent, hangeMoveContentPage, etats, handleSuccess} ) => {
     const [studentData, setStudentData] = useState([]);
-    const [columnIsMissing, setColumnIsMissing] = useState(false);
+    const [columnIsMissing, setColumnIsMissing] = useState(true);
     let indiceC = 0;
 
-    const sendCoursesToServer = async () => {
-        try {
-          // const response = await axios({ method: 'post', url: 'http://localhost:3001/saveUsers', data: formData });
-          const response = await axios.post('http://localhost:3001/saveCours', studentData);
-      
-          if (response.status === 200) {
-              console.log("L'enregistrement s'est terminée avec succès !");
-              console.log('Réponse de l\'API :', response);
-            //   ttiskaSync();
-          } else {
-              console.error('#1. Erreur lors de l\'envoi du fichier :', response);
-          }
-        } catch (error) {
-            console.error('#2. Erreur lors de l\'envoi :', error);
-        }
+    const sendCoursesToServer = () => {
+        axios.post('http://localhost:3001/saveCours', studentData)
+        .then(response => {
+            console.log(response);
+            if (response.status === 200) {
+                console.log("L'enregistrement s'est terminée avec succès !");
+                console.log('Réponse de l\'API :', response);
+                handleSuccess("Enregistrement des cours", response.data.message)
+              //   ttiskaSync();
+            } else {
+                console.error('#1. Erreur lors de l\'envoi du fichier :', response);
+            }
+        })
+        .catch(error => {
+            console.log("CATCH : "+error);
+        })
     };
 
 
     const checkColumns = (datas) => {
-        console.log(datas);
-        // sendCoursesToServer(datas);
-        datas.map(item => {
-            item.cours && item.section && item.option && item.promotion && item.teacherNumber && item.teacherName && item.semester && item.activeDate && item.classId && item.className && item.univId
-            ? console.log(columnIsMissing) : setColumnIsMissing(true)
+        datas.map(item => { item.cours 
+            // && item.section && item.option && item.promotion && item.teacherNumber && item.teacherName && item.semester && item.activeDate && item.dates && item.classId && item.className && item.univId
+            ? ( setColumnIsMissing(false) ) : setColumnIsMissing(true)
         })
     }
 
@@ -65,13 +64,8 @@ const SaveCourses = ( {darkMode, setDarkMode, activeContent, setActiveContent, h
 
     const handlaStartSending = (e) => {
         e.preventDefault()
-        sendCoursesToServer()
+        sendCoursesToServer(studentData)
     }
-    
-
-
-
-
 
     return (
         <div className={darkMode ? 'container bulletin_card d-flex justify-content-center align-items-center text-light' : 'container bulletin_card d-flex justify-content-center align-items-center'}>
@@ -83,7 +77,7 @@ const SaveCourses = ( {darkMode, setDarkMode, activeContent, setActiveContent, h
                                 <div className="card-body pt-3">
                                     <h5 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Selectionnez votre fichier content les cours selon leurs section, filière et option.</h5>
                                     {columnIsMissing ?
-                                    <p className={darkMode ? "text-light" : "text-dark"}>Il y a des colonnes manquantes dans le fichier excel selectionné.<br/>Votre fichier doit contenir plus de 11 colonnes suivantes : cours, section, option, promotion, teacherNumber, teacherName, semester, activeDate, classId, className, univId </p>
+                                    <p className={darkMode ? "text-light" : "text-dark"}>Il y a des colonnes manquantes dans le fichier excel selectionné.<br/>Votre fichier doit contenir plus de 11 colonnes suivantes : cours, section, option, promotion, teacherNumber, teacherName, semester, activeDate, dates, classId, className, univId </p>
                                     :""}
                                     
                                     <form className="was-validated">
@@ -92,7 +86,9 @@ const SaveCourses = ( {darkMode, setDarkMode, activeContent, setActiveContent, h
                                             <input type="file" onChange={handleFileChange}  id='liste' className={darkMode ? "bg-dark mb-3 form-control text-light" : "bg-light mb-3 form-control text-dark"} aria-label="file example" required />
                                         </div> 
 
+                                        {!columnIsMissing ?
                                         <button type="submit" className="mt-3 btn btn-outline-info" onClick={handlaStartSending}>Continuer</button>
+                                        :""}
                                     </form>
                                     {/* {studentData.map(item => (
                                         <div key={indiceC = indiceC+1} className="mb-3">

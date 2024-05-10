@@ -7,6 +7,8 @@ import contact from "../Assets/Imgs/contact.jfif";
 import homePainCotidien from "../Assets/Imgs/homePainCotidien.jpg";
 import home from "../Assets/Imgs/home.jfif";
 import baccool from "../Assets/Imgs/baccool.jfif";
+import painCotudien from "../Assets/Imgs/pain.jpg";
+import pain_logo from "../Assets/Imgs/pain_logo.jpg";
 
 import sauts from "../Assets/Videos/sauts.mp4";
 // import en_co1 from "../Assets/Videos/en_co1.mp4";
@@ -35,7 +37,7 @@ const ulrs = {
     urlApi,
 
     // images
-    game, contact, homePainCotidien, home, baccool, b2, ines, logo_univ,
+    game, contact, homePainCotidien, home, baccool, b2, ines, logo_univ, painCotudien, pain_logo,
     // videos
     sauts, 
     the_street_called_mercy, goodgrace_video,

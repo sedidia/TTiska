@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import emailjs from "emailjs-com";
 import url from "../Config/Config";
 
@@ -8,56 +8,32 @@ import url from "../Config/Config";
 
 const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAllDatas } ) => {
   // the users collection
-  const [users, setUsers] = useState([]);
-  const [enterAccessCode, setEnterAccessCode] = useState(false);
-
-  const [stepRegisterContent, setStepRegisterContent] = useState("homeReg");
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  // manage errors
-  const [accessCodeError, setAccessCodeError] = useState(true);
-  const [numberError, setNumberError] = useState(true);
-  const [userNameError, setUserNameError] = useState(true);
-  const [emailAdressError, setEmailAdressError] = useState("empty");
-
-  // const [accountExist, setAccountExist] = useState(false);
-
-  const [ username, setUsername ] = useState("");
-  const [ userNumber, setUserNumber ] = useState(0);
-  const [ emailAdress, setEmailAdress ] = useState("");
-  const [ userType, setUserType ] = useState("normal"); // none, normal, company, university, doormen, teacher, student
-  const [ section, setSection ] = useState(null);
-  const [ filiere, setFiliere ] = useState(null);
-  const [ promotion, setPromotion ] = useState(null);
-  const [ univId, setUnivId ] = useState(null);
-  const [ accessCode, setAccessCode ] = useState("");
-  const [ rememberMe, setRememberMe ] = useState(false);
-  const [ isOnline, setisOnline ] = useState(true);
-  const [ accountConfirmed, setAccountConfirmed ] = useState(true);
-  let mdp = "";
   const uniqueAccessCode = Math.random().toString(36).substr(2, 9);
 
-  // fonction d'envoi de mail
-  function sendEmail(e,to_name,to_email,message) {
-    e.preventDefault();
-    const templateParams = {
-      from_name: 'UNILU',
-      from_email: 'sedidiak@gmail.com',
-      to_name: to_name,
-      to_email: to_email,
-      message: message
-    };
-  
-    emailjs.send('service_zag6nfb', 'template_g3gx1ll', templateParams, "f1f1daRRgGiNdplgo")
-    .then((result) => {
-      console.log(result.text);
-      console.log("Email envoyé avec succès !");
-    }, (error) => {
-      console.log(error.text);
-      console.log("Email non envoyé !");
-    });
-  }
-  // fonction d'envoi de mail
+  const [step, setStep] = useState("number");
+  const [activeStep, setActiveStep] = useState("number");
+  const [activeBtn, setActiveNextStep] = useState(false);
+
+  const [unConfirmed, setUnConfirmed] = useState(false);
+
+  const [userNumber, setUserNumber] = useState(1);
+  const [accessCode, setAccessCode] = useState("");
+  const [emailAdress, setEmailAdress] = useState("");
+  const [filiere, setFiliere] = useState("");
+  const [promotion, setPromotion] = useState("");
+  const [section, setSection] = useState("");
+  const [univId, setUnivId] = useState("");
+  const [userType, setUserType] = useState("");
+  const [username, setUsername] = useState("");
+  const [isOnline, setIsOnline] = useState(true);
+  const [accountConfirmed, setAccountConfirmed] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const [numberError, setNumberError] = useState(true);
+  const [userNameError, setUserNameError] = useState(true);
+  const [emailAdressError, setEmailAdressError] = useState(true);
+  const [accessCodeError, setAccessCodeError] = useState(true);
+
 
   const ttiskaSync = async () => {
     try {
@@ -65,365 +41,350 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
       const response = await fetch('http://localhost:3001/collections');
       const data = await response.json();
       
-      setUsers(data.users); // collection "users"
-
-      // console.log(data);
       setAllDatas(data);
-      // console.log(data.startup_log);
-      // setServerData(data);
 
-      initActiveUser("start", data.users)
-
-      // setisOnline(true)
-      // setAccountConfirmed(true)
     } catch (error) {
       console.error('Erreur lors de la récupération des données :', error);
     }
   };
-
-  useEffect(() => {
-    ttiskaSync();
-  }, []);
-
+    
   const sendDataToServer = async () => {
-    // saveDoormen
-    try {
-      // const response = await axios({ method: 'post', url: 'http://localhost:3001/saveUsers', data: formData });
-      // const response = await axios.post(`${url.urlApi}/saveUsers`, 
-      const response = await axios.post(`${url.urlApi}/saveDoormen`, 
-      [{
-          "username": username,
-          "userNumber": userNumber,
-          "emailAdress": emailAdress,
-          "userType": userType,
-          "section": section,
-          "filiere": filiere,
-          "promotion": promotion,
-          "rememberMe": rememberMe,
-          "isOnline": isOnline,
-          "accessCode": uniqueAccessCode,
-          "univId": univId,
-          "accountConfirmed": accountConfirmed
-        }]
-      );
-  
-      if (response.status === 200) {
-          console.log('Réponse de l\'API :', response);
-          ttiskaSync();
-      } else {
-          console.error('#1. Erreur lors de l\'envoi du fichier :', response);
+      // saveDoormen
+      try {
+        // const response = await axios({ method: 'post', url: 'http://localhost:3001/saveUsers', data: formData });
+        // const response = await axios.post(`${url.urlApi}/saveUsers`, 
+        const response = await axios.post(`${url.urlApi}/saveDoormen`, 
+        [{
+            "username": username,
+            "userNumber": userNumber,
+            "emailAdress": emailAdress,
+            "userType": userType,
+            "section": section,
+            "filiere": filiere,
+            "promotion": promotion,
+            "rememberMe": rememberMe,
+            "isOnline": isOnline,
+            "accessCode": uniqueAccessCode,
+            "univId": univId,
+            "accountConfirmed": accountConfirmed
+          }]
+        );
+        
+        if (response.status === 200) {
+            console.log('Réponse de l\'API :', response);
+            ttiskaSync();
+        } else {
+            console.error('#1. Erreur lors de l\'envoi du fichier :', response);
+        }
+      } catch (error) {
+          console.error('#2. Erreur lors de l\'envoi :', error);
       }
-    } catch (error) {
-        console.error('#2. Erreur lors de l\'envoi :', error);
-    }
   };
 
   // validations
   const validatePhoneNumber = (e) => {    
     setUserNumber(e.target.value);
-    setNumberError(/^\d{10}$/.test(e.target.value) ? false : true);
+    setNumberError(/^\d{9}$/.test(e.target.value) ? false : true);
+      const adts = allDatas.users.filter(number => number.userNumber === e.target.value)
+      if(e.target.value.length === 9){
+        setNumberError(false)
+        if(adts.length === 1){
+          adts.filter(find => {
+            if(find.accountConfirmed){            
+              setStep("enterAccessCode")
+              // states init
+              setEtats(find !== undefined ? find : {});
+              console.log(find.accessCode);
+              // states init
+              return
+            }
+            setUserNumber(find.userNumber)
+            // setAccessCode(find.accessCode)
+            setEmailAdress(find.emailAdress)
+            setFiliere(find.filiere)
+            setPromotion(find.promotion)
+            setSection(find.section)
+            setUnivId(find.univId)
+            setUserType(find.userType)
+            setUsername(find.username)
+            setIsOnline(true)
+            setAccountConfirmed(true)
+            setRememberMe(find.rememberMe)
+
+            setUnConfirmed(true)
+
+            setStep("username_emailadress")
+            console.log("non confirmé");
+          } )
+    
+          return
+        }
+        setStep("username_emailadress")
+      }else{
+        setNumberError(true)
+      }
   };
   const validateUsername = (e) => {    
     setUsername(e.target.value);
     setUserNameError(e.target.value.length <= 3 ? true : false);
+
+    if(e.target.value.length > 3){
+      emailAdressError === "valid" ? setStep("userType") : setStep("username_emailadress")
+    }
+    
   };
   const validateEmail = (e) => {
     setEmailAdress(e.target.value);
-    setEmailAdressError(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value) ? "valid" : "invalid");
-    
-    const userExiste = users.find(user => user.emailAdress === e.target.value);
-    setEtats(userExiste !== undefined ? userExiste : {});
-    if (userExiste) {
+
+    const emailExiste = allDatas.users.find(user => user.emailAdress === e.target.value);
+    setEtats(emailExiste !== undefined ? emailExiste : {});
+    if (emailExiste) {
       setEmailAdressError("taken");
     }
+    setEmailAdressError(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value) ? "valid" : "invalid");
+    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value)){
+      !userNameError ? setStep("userType") : setStep("username_emailadress")
+    }
+    
   };
-
-  const handleCheckSteps = (e) => {
-    e.preventDefault()
-    if(!numberError && !userNameError){
-      handleUsersInfos();
-    }else{
-      console.log("Veillez remplir tous les champs");
-    }
-  }
-
-  
-  const handleUsersInfos = () => {
-    if(stepRegisterContent === "homeReg" && username !== "" && userNumber !== 0){
-      // init function
-      initActiveUser("check user", users)
-    }else{
-      setErrorMessage("The username and the number mustn't be empty, please supply them !");
-    }
-    if(stepRegisterContent === "chooseAcoutType" && userType !== ""){
-      setStepRegisterContent("confirmAccount")
-    }
-    if(stepRegisterContent === "confirmAccount"){
-      if (emailAdressError === "valid") {
-        sendDataToServer()
-      }
-    }
-  }
-
-  const initActiveUser = (message, data) => {
-    
-    const userNumberExiste = data.find(user => user.userNumber === userNumber.toLocaleString());
-    const numberANDusername = data.find(user => 
-      user.userNumber === userNumber &&
-      (user.username !== null? user.username.toLocaleString(): "") === username.toLocaleString()
-    );
-    
-    setEtats(numberANDusername !== undefined ? userNumberExiste : {});
-    if (numberANDusername && numberANDusername.accountConfirmed) {
-      setEtats(numberANDusername);
-      setEnterAccessCode(true) 
-      console.log(numberANDusername.accessCode);
-      mdp = numberANDusername.accessCode; 
-    } else {
-      if(userNumberExiste){
-        setUserType(userNumberExiste.userType)
-        setUnivId(userNumberExiste.univId)
-        setSection(userNumberExiste.section)
-        console.log("1: "+userNumberExiste);
-        setStepRegisterContent("confirmAccount")
-      }else{
-        console.log("2: "+userNumberExiste);
-        if(message !== "start"){
-          console.log("3: "+userNumberExiste);
-          setStepRegisterContent("chooseAcoutType")
-          return
-        }
-      }
-    }
-  } 
 
   const checkAccessCode = (etargetvalue) => {
     setAccessCode(etargetvalue)
-    console.log(etats.accessCode +"==="+ etargetvalue);
-    if(etats.accessCode.toLowerCase() === etargetvalue.toLowerCase()){
-      if(etats.userType === "university" || etats.userType === "doorman"|| etats.userType === "student"){
-        setActiveContent("HomeUniv")
-        return
-      }
-      setActiveContent("Home")
+
+    const stateUser = allDatas.users.filter(number => number.userNumber === userNumber)
+    if(stateUser.length === 1){
+      stateUser.filter(find => {
+        console.log(find.accessCode+" === "+etargetvalue);
+        console.log(find);
+        setEtats(find)
+        if(find.accessCode === etargetvalue){
+          if(find.userType === "university" || find.userType === "doorman" || find.userType === "teacher"|| find.userType === "student"){
+            setActiveContent("HomeUniv")
+            return
+          }
+          setActiveContent("Home")
+          return
+        }
+        setAccessCodeError(true)
+      } )
+
       return
     }
-    setAccessCodeError(true)
+    
+    
+    
+  }
+  const hendleNextStep = (e) => {
+    e.preventDefault()
+
+    if(unConfirmed && activeStep === "username_emailadress"){
+               
+      setStep("enterAccessCode")
+      setActiveStep("confirmNow")
+    }else{
+      setActiveStep(step)
+    }
+
+    if((userType === "university" && univId !== "") || (userType === "teacher") || (userType === "doorman" && activeStep === "confirmNow") || (userType === "student" && univId !== "" && section !== "" && filiere !== "" && promotion !== "")){
+      console.log("envoi...............");
+      sendDataToServer()
+    }
+  }
+
+  const hendleTypeUser = (data) => {
+    setUserType(data)
+    if(data === "normal"){
+      // enregistrement de l'utilisateur
+      sendDataToServer()
+    }
+    if(data === "university"){
+      setStep("university")
+    }
+    if(data === "student"){
+      setStep("student")
+    }
+  }
+
+  const handleUniv_section_filiere_promotion = (e, title) => {
+    console.log(e.target.value);
+    if(title === "univId"){
+      setUnivId(e.target.value)
+      setStep(activeStep)
+      if(userType === "university"){
+        setStep("enterAccessCode")
+      }
+    }
+    if(title === "section"){
+      setSection(e.target.value)
+      setStep(activeStep)
+    }
+    if(title === "filiere"){
+      setFiliere(e.target.value)
+      setStep(activeStep)
+    }
+    if(title === "promotion"){
+      setPromotion(e.target.value)
+      setStep("enterAccessCode")
+    }
+
+    
 
   }
-  
+
+  useEffect(() => {
+    ttiskaSync()
+  }, [])
 
   return (
     <div className={darkMode ? "container d-flex justify-content-center mt-4 text-light" : "container d-flex justify-content-center mt-4"}>
-      <div>
-          <form className="was-validated">
-            {enterAccessCode?
-                <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>      
-                  <h2>Please confirm it's you !</h2>
-                  <p className={"p-2"}>Please enter your access code to confirm it's you. </p>
             
-                  <label htmlFor="userNumber" className={accessCodeError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Votre code d'accès.*":"Pas de correspondance des codes d'accès.*"}</label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="accessCode" name="accessCode" value={accessCode} onChange={ (e) => checkAccessCode(e.target.value) } placeholder="Votre code d'accès" /> 
-                </div>
-                :""}
-            
-            {stepRegisterContent === "homeReg" ?
-            <div>
-              {!enterAccessCode ?
-              <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>
-                <div className="card-body pt-3">
-                  <h5 className={darkMode ? "card-title pb-4 text-light" : "card-title pb-4 text-dark"}>Please tell a bit us about you !</h5>
-                  {userNameError || numberError ?
-                  <p>Veillez renseigner un nom d'utilisateur et un numero valide <br/> pour pouvoir vous connecter ou vous inscrire.</p>
-                  :
-                  <p>Merci d'avoir renseigner les nom d'utilisateur et numero valide <br/> Saisissez votre code d'accès pour acceder à la plateforme.</p>
-                  }
-                  <p className='text-danger'>{errorMessage}</p>
-                  <Link to="/" onClick={(e) => sendEmail(e,"idris","sedidia01@gmail.com","salut !")}>Envoyer email</Link>
-                  
-                  <div>
-                    <label htmlFor="username" className={
-                      userNameError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}
-                    >{userNameError ? "Veuillez saisir un nnom d'utilisateur valide (+ de 4 caractères).":"Votre Nom d'utilisateur*"}</label>
-                    <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="username" name="username" value={username} onChange={validateUsername} placeholder="Your Username" /> 
-                    
-                    <label htmlFor="userNumber" className={numberError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Veuillez saisir un numéro de téléphone valide (10 chiffres).":"Votre Numero de telephone*"}</label>
-                    <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
-                  </div>
+      <form className={darkMode ? "was-validated dark_object rounded p-4 position-relative mb-4" : "was-validated bg-white rounded p-4 position-relative mb-4"}>
 
-                  
-                  {stepRegisterContent === "homeReg" ?
-                    <button className='btn btn-outline-info mt-4' onClick={handleCheckSteps}>Follow the nest step / Login</button>
-                  : ""}
-                </div>
-              </div>
-              :""}
-            </div>
+        {activeStep === "enterAccessCode" ?
+        <div>      
+          <h2>Please confirm it's you !</h2>
+          <p className={"p-2"}>Please enter your access code to confirm it's you. </p>
+            
+          <label htmlFor="accessCode" className={accessCodeError ? "d-flex justify-content-between text-danger mt-4 mb-1":"d-flex justify-content-between mt-4 mb-1"}>{numberError ? "Votre code d'accès.*":"Pas de correspondance des codes d'accès.*"}</label>
+          <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="accessCode" name="accessCode" value={accessCode} onChange={ (e) => checkAccessCode(e.target.value) } placeholder="Votre code d'accès" /> 
+        </div>
+        :""}
+
+        {activeStep === "number" ?
+        <div>
+          <label htmlFor="userNumber" className={numberError ? "d-flex mb-1 mt-4 text-danger" : "d-flex mb-1 mt-4"}>Votre numéro de telephone</label>
+          <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
+        </div>
+        :""}
+
+        {activeStep === "username_emailadress" ?
+        <div>
+          <label htmlFor="username" className={userNameError ? "d-flex mb-1 mt-4 text-danger" : "d-flex mb-1 mt-4"}>Votre nom d'utilisateur...</label>
+          <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="text" id="username" name="username" value={username} onChange={validateUsername} placeholder="Your Username" /> 
           
-            : stepRegisterContent === "chooseAcoutType" ?
-            <div className='acountType'>
-              <h2>What kind of account do you need?</h2>
-              <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Please choose an account type you want to create. </p>
-
-              <div className="row">
-                <div className="col-md-6 col-lg-4 p-2">
-                  {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
-                  <div className={
-                    userType === "normal" && darkMode ? "p-4  bg-primary checkType" :
-                    userType === "normal" && !darkMode ? "p-4 bg-dark text-light checkType" :
-                    userType !== "normal" && darkMode ? "p-4 dark_object checkType" 
-                    : "p-4 bg-white checkType"} onClick={() => setUserType("normal")}>
-                    <aside className="d-flex justify-content-center align-items-center">
-                      {/* <i className="icon-money text-danger p-2"></i> */}
-                      <h4>I want to create a normal account</h4>
-                    </aside>
-                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("normal")}>Create a normal account</Link> */}
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-4 p-2">
-                  {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
-                  <div className={
-                    userType === "university" && darkMode ? "p-4  bg-primary checkType" :
-                    userType === "university" && !darkMode ? "p-4 bg-dark text-light checkType" :
-                    userType !== "university" && darkMode ? "p-4 dark_object checkType" 
-                    : "p-4 bg-white checkType"} onClick={() => setUserType("university")}>
-                    <aside className="d-flex justify-content-center align-items-center">
-                      {/* <i className="icon-money text-danger p-2"></i> */}
-                      <h4>I'm an administrator on my university</h4>
-                    </aside>
-                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("university")}>Create a administrator's account</Link> */}
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-4 p-2">
-                  {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
-                  <div className={
-                    userType === "doorman" && darkMode ? "p-4  bg-primary checkType" :
-                    userType === "doorman" && !darkMode ? "p-4 bg-dark text-light checkType" :
-                    userType !== "doorman" && darkMode ? "p-4 dark_object checkType" 
-                    : "p-4 bg-white checkType"} onClick={() => setUserType("doorman")}>
-                    <aside className="d-flex justify-content-center align-items-center">
-                      {/* <i className="icon-money text-danger p-2"></i> */}
-                      <h4>I'm a doorman on my university</h4>
-                    </aside>
-                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("doorman")}>Create an doormen's account</Link> */}
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-4 p-2">
-                  {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
-                  <div className={
-                    userType === "teacher" && darkMode ? "p-4  bg-primary checkType" :
-                    userType === "teacher" && !darkMode ? "p-4 bg-dark text-light checkType" :
-                    userType !== "teacher" && darkMode ? "p-4 dark_object checkType" 
-                    : "p-4 bg-white checkType"} onClick={() => setUserType("teacher")}>
-                    <aside className="d-flex justify-content-center align-items-center">
-                      {/* <i className="icon-money text-danger p-2"></i> */}
-                      <h4>I'm a teacher on my university</h4>
-                    </aside>
-                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("teacher")}>Create a teacher's account</Link> */}
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-4 p-2">
-                  {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
-                  <div className={
-                    userType === "student" && darkMode ? "p-4  bg-primary checkType" :
-                    userType === "student" && !darkMode ? "p-4 bg-dark text-light checkType" :
-                    userType !== "student" && darkMode ? "p-4 dark_object checkType" 
-                    : "p-4 bg-white checkType"} onClick={() => setUserType("student")}>
-                    <aside className="d-flex justify-content-center align-items-center">
-                      {/* <i className="icon-money text-danger p-2"></i> */}
-                      <h4>I'm an student at the university</h4>
-                    </aside>
-                    {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("student")}>Create a student's account</Link> */}
-                  </div>
-                </div>
-              </div>
-            </div>
-            : !enterAccessCode && stepRegisterContent === "confirmAccount" ?
-            <div className={darkMode ? "dark_object rounded p-4 position-relative mb-4" : "bg-white rounded p-4 position-relative mb-4"}>
-              <div className="card-body pt-3">
-                <h2 className='card-title pb-4'>Please tell a bit us about you !</h2>
-                {/* <p>Veillez changer ce numéro car il est déjà utilisé par une autre personne,<p/> si c'est vous, veillez vous connecter.</p> */}
-                
-                <label htmlFor="emailAdress" className={
-                  (emailAdressError === "invalid" || emailAdressError === "taken") ? "d-flex justify-content-between text-danger mt-4 mb-1":
-                  emailAdressError === "empty" ? "d-flex justify-content-between mt-4 mb-1"
-                  :"d-flex justify-content-between mt-4 mb-1"}>
-
-                    {emailAdressError === "invalid" ? "Veillez saisir une adresse email valide !":
-                    emailAdressError === "empty" ? "Veillez saisir votre email":
-                      emailAdressError === "taken" ? "L'adresse email saisi est déjà prise. Veillez changer !" :
-                      "Merci d'avoir saisi une adresse email valide !"
-                    }
-                </label>
-                <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="email" id="emailAdress" value={emailAdress} name="emailAdress" onChange={validateEmail} placeholder="Your Email adress" />
-
-                {/* {userType === "university" || userType === "doorman" || userType === "teacher" || userType === "student" ? */}
-                {userType === "university" || userType === "student" ?
-                <div>
-                  <label htmlFor="univId" className={"d-flex justify-content-between mt-4 mb-1"}>
-
-                      {(univId=== null || univId=== "" || univId === " ") ? "Le nom de l'université doit contenir plus de 3 caractères.":
-                      "Merci d'avoir saisi un nom d'université valide !"
-                      }
-                  </label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="univId" value={univId} name="univId" onChange={(e) => setUnivId(e.target.value)} placeholder="Your university's name" />
-                </div>
-                :""}
-                
-                {userType === "student" ?
-                <div>
-                  <label htmlFor="section" className={"d-flex justify-content-between mt-4 mb-1"}>
-
-                      {(section === null || section === "" || section === " ") ? "Le nom de la section ne doit pas etre vide.":
-                      "Merci d'avoir saisi un nom de section valide !"
-                      }
-                  </label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="section" value={section} name="section" onChange={(e) => setSection(e.target.value)} placeholder="Your section's name" /> 
-                </div>
-                :""}
-
-                {userType === "student" ?
-                <div>
-                  <label htmlFor="filiere" className={"d-flex justify-content-between mt-4 mb-1"}>
-
-                      {(filiere === null || filiere === "" || filiere === " ") ? "Le nom de la filiere ne doit pas etre vide.":
-                      "Merci d'avoir saisi un nom de filiere valide !"
-                      }
-                  </label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="filiere" value={filiere} name="filiere" onChange={(e) => setFiliere(e.target.value)} placeholder="Your option's name" /> 
-                  <label htmlFor="promotion" className={"d-flex justify-content-between mt-4 mb-1"}>
-
-                      {(promotion === null || promotion === "" || promotion === " ") ? "Le nom de la promotion ne doit pas etre vide.":
-                      "Merci d'avoir saisi un nom de promotion valide !"
-                      }
-                  </label>
-                  <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="promotion" value={promotion} name="promotion" onChange={(e) => setPromotion(e.target.value)} placeholder="Your promotion's name" /> 
-                </div>
-                :""}
-
-              </div>
-              <div>
-                <div className="form-check form-switch d-flex justify-content-start mt-4">
-                  <input className="form-check-input m-2" type="checkbox" checked={rememberMe} onChange={ (e)=> setRememberMe(e.target.checked) } id="flexSwitchCheckDefault" />
-                  <label className="form-check-label m-2" htmlFor="flexSwitchCheckDefault">Se souvenir de moi</label>
-                </div>
-
-                <button className={"btn btn-outline-info mt-4"} type="button" onClick={handleCheckSteps}>Confirm your TTiska account</button>
-              </div>
-            </div>
-            : ""}
-            
-            {(stepRegisterContent === "chooseAcoutType" && userType !== "") ?
-            <button className='btn btn-outline-info mt-4' onClick={handleCheckSteps}>Follow the nest step / Login</button>
-            : ""}
-            
+          <label htmlFor="emailAdress" className={emailAdressError === "invalid" || emailAdressError === "taken" ? "d-flex mb-1 mt-4 text-danger" : "d-flex mb-1 mt-4"}>{emailAdressError === "valid" ? "Merci d'avoir saisi une adresse email valide" : emailAdressError === "invalid" ? "L'adresse email saisi est incorrecte" : emailAdressError === "taken" ? "L'adresse email saisi est déjà prise" : "Veillez saisir votre adresse email"} </label>
+          <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="email" id="emailAdress" value={emailAdress} name="emailAdress" onChange={validateEmail} placeholder="Your Email adress" />
+        </div>
+        :""}
         
-          </form>
-      </div>
+        {activeStep === "userType" ?
+        <div className="row">
+          <div className="col-md-6 col-lg-4 p-2">
+              {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
+              <div className={
+                userType === "normal" && darkMode ? "p-4  bg-primary checkType" :
+                userType === "normal" && !darkMode ? "p-4 bg-dark text-light checkType" :
+                userType !== "normal" && darkMode ? "p-4 dark_object checkType" 
+                : "p-4 bg-white checkType"} onClick={() => hendleTypeUser("normal")}>
+                <aside className="d-flex justify-content-center align-items-center">
+                  {/* <i className="icon-money text-danger p-2"></i> */}
+                  <h4>I want to create a normal account</h4>
+                </aside>
+                {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("normal")}>Create a normal account</Link> */}
+              </div>
+          </div>
+          <div className="col-md-6 col-lg-4 p-2">
+            {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
+            <div className={
+              userType === "university" && darkMode ? "p-4  bg-primary checkType" :
+              userType === "university" && !darkMode ? "p-4 bg-dark text-light checkType" :
+              userType !== "university" && darkMode ? "p-4 dark_object checkType" 
+              : "p-4 bg-white checkType"} onClick={() => hendleTypeUser("university")}>
+              <aside className="d-flex justify-content-center align-items-center">
+                {/* <i className="icon-money text-danger p-2"></i> */}
+                <h4>I'm an administrator on my university</h4>
+              </aside>
+              {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("university")}>Create a administrator's account</Link> */}
+            </div>
+          </div>
+         
+          <div className="col-md-6 col-lg-4 p-2">
+            {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
+            <div className={
+              userType === "student" && darkMode ? "p-4  bg-primary checkType" :
+              userType === "student" && !darkMode ? "p-4 bg-dark text-light checkType" :
+              userType !== "student" && darkMode ? "p-4 dark_object checkType" 
+              : "p-4 bg-white checkType"} onClick={() => hendleTypeUser("student")}>
+              <aside className="d-flex justify-content-center align-items-center">
+                {/* <i className="icon-money text-danger p-2"></i> */}
+                <h4>I'm an student at the university</h4>
+              </aside>
+              {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("student")}>Create a student's account</Link> */}
+            </div>
+          </div>
+        </div>
+        :""}
 
+        {activeStep === "university" ?
+        <div>
 
+          <label htmlFor="univId" className="d-flex mb-1 mt-4">Votre université...</label>
+          <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="text" id="univId" value={univId} name="univId" onChange={ (e) => handleUniv_section_filiere_promotion(e, "univId") } placeholder="Le nom de votre université..." />
+        </div>
+        :""}
+        {activeStep === "student" ?
+        <div>
+          <label htmlFor="univId" className="d-flex mb-1 mt-4">Votre université...</label>
+          <select name="univId" value={univId} onChange={ (e) => handleUniv_section_filiere_promotion(e, "univId") } className="form-control">
+            <option value={""}>Veillez choisir votreuniversité</option>
+              {allDatas.courses
+              .map(item => (
+                  <option key={item._id} value={item.univId}>{item.univId}</option>
+              ))}
+          </select>
+
+          <label htmlFor="section" className="d-flex mb-1 mt-4">Votre section...</label>
+          <select name="section" value={section} onChange={ (e) => handleUniv_section_filiere_promotion(e, "section") } className="form-control">
+            <option value={""}>Veillez choisir votreuniversité</option>
+              {allDatas.courses
+              .filter(item => item.univId === univId)
+              .map(item => (
+                  <option key={item._id} value={item.section}>{item.section}</option>
+              ))}
+          </select>
+
+          <label htmlFor="filiere" className="d-flex mb-1 mt-4">Votre filière...</label>
+          <select name="filiere" value={filiere} onChange={ (e) => handleUniv_section_filiere_promotion(e, "filiere") } className="form-control">
+            <option value={""}>Veillez choisir votreuniversité</option>
+              {allDatas.courses
+              .filter(item => item.univId === univId)
+              .filter(item => item.section === section)
+              .map(item => (
+                  <option key={item._id} value={item.filiere}>{item.filiere}</option>
+              ))}
+          </select>
+          
+          <label htmlFor="promotion" className="d-flex mb-1 mt-4">Votre promotion...</label>
+          <select name="promotion" value={promotion} onChange={ (e) => handleUniv_section_filiere_promotion(e, "promotion") } className="form-control">
+            <option value={""}>Veillez choisir votreuniversité</option>
+              {allDatas.courses
+              .filter(item => item.univId === univId)
+              .filter(item => item.section === section)
+              .filter(item => item.filiere === filiere)
+              .map(item => (
+                  <option key={item._id} value={item.promotion}>{item.promotion}</option>
+              ))}
+          </select>
+          
+        </div>
+        :""}
+
+        {(userType === "normal" && activeStep === "userType") || activeStep === "student"  || activeStep === "university" || (activeStep === "confirmNow" && unConfirmed) ?
+        <div className="form-check form-switch d-flex justify-content-start mt-4">
+          <input className="form-check-input m-2" type="checkbox" checked={rememberMe} onChange={ (e)=> setRememberMe(e.target.checked) } id="flexSwitchCheckDefault" />
+          <label className="form-check-label m-2" htmlFor="flexSwitchCheckDefault">Se souvenir de moi</label>
+        </div>
+        :""}
+
+        <button className='btn btn-outline-info mt-4' onClick={hendleNextStep}>
+          {(userType === "normal" && activeStep === "userType") || activeStep === "student"  || activeStep === "university" || activeStep === "confirmNow" ? "Confirmer" : "Suivant"}
+        </button>
+
+                  
+      </form>
+      
     </div>
   );
 };
-
+      
 export default UserForm;

@@ -1,19 +1,31 @@
 .headerChurch{
     width: 100%;
     height: 100vh;
-    background-image: url(../Imgs/home.jfif);
+    background-image: url(../Imgs/pain.jpg);
     background-position: bottom;
     background-size: cover;
     overflow: hidden;
 }
 .headerChurch .headerHover{
-    /* background: #00000083; */
+    background: rgba(0, 0, 0, 0.363);
+    width: 100%;
+    height: 100%;
+}
+.headerChurch .headerHover.dark{
+    background: rgba(0, 0, 0, 0.822);
     width: 100%;
     height: 100%;
 }
 .headerChurch .headerHover .headerHoverContent{
     width: 100%;
     height: 100%;
+}
+
+.dark_black{
+    background: #000000;
+}
+.noDark{
+    background: #cfe2ff;
 }
 
 .spaneRight{
@@ -30,4 +42,16 @@
         font-size: 230px;
     }
     
+}
+
+.logo_pain{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.logo_pain2{
+    margin-top: 5em;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
 }
