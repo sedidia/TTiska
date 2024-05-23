@@ -9,7 +9,7 @@
     width: 22cm;
     height: 29.7cm;
     padding: 2.5cm;
-    border-right: 2em solid rgba(248, 249, 250, 1);
+    border-right: 2em solid transparent;
     font-family: 'Times New Roman', Times, serif;
 }
 .bulletin .identite_etudia div,

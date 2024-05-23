@@ -340,9 +340,27 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats, al
                                 :""}
                                 {etats.userType === "student"?
                                 <div className='row mt-4'>  
-                                    <h2>Liste des cours programés</h2>
+                                    <h2 className='mb-4'>Liste des cours programés</h2>
                                     
-                                    {allDatas.courses
+                                    {allDatas.schedules
+                                    // .filter(item => item.univId === etats.univId)
+                                    // .filter(item => item.promotion === etats.promotion)
+                                    // .filter(item => item.filiere === etats.filiere)
+                                    // .filter(item => item.activeDate !== null)
+                                    // .filter(item => item.activeDate !== "")
+                                    .map(item => (
+                                    <div key={item._id}>                                        
+                                        <li className='col-md-6 col-lg-4'>
+                                            <div className='dark_object p-2'>
+                                                <h4 className='d-flex'>Cours : {item.cours}</h4>
+                                                <h4 className='d-flex'>Enseignant : {item.teacherName}</h4>
+                                                <p className='d-flex'>Salle : {item.className}</p>
+                                                <p className='d-flex'>Date et heures : {item.dates} </p>
+                                            </div>
+                                        </li>
+                                    </div>
+                                    ))}
+                                    {/* {allDatas.courses
                                     .filter(item => item.univId === etats.univId)
                                     .filter(item => item.promotion === etats.promotion)
                                     .filter(item => item.filiere === etats.filiere)
@@ -360,7 +378,7 @@ const Cba = ( {darkMode, setDarkMode, activeContent, setActiveContent, etats, al
                                             </div>
                                         </li>
                                     </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                                 :""}
                             </div>

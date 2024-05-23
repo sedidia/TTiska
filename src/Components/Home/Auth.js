@@ -8,6 +8,8 @@ import url from "../Config/Config";
 
 const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAllDatas } ) => {
   // the users collection
+  const [etatsCopy, setEtatsCopy] = useState([]);
+
   const uniqueAccessCode = Math.random().toString(36).substr(2, 9);
 
   const [step, setStep] = useState("number");
@@ -93,7 +95,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
             if(find.accountConfirmed){            
               setStep("enterAccessCode")
               // states init
-              setEtats(find !== undefined ? find : {});
+              setEtatsCopy(find !== undefined ? find : {});
               console.log(find.accessCode);
               // states init
               return
@@ -137,7 +139,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
     setEmailAdress(e.target.value);
 
     const emailExiste = allDatas.users.find(user => user.emailAdress === e.target.value);
-    setEtats(emailExiste !== undefined ? emailExiste : {});
+    setEtatsCopy(emailExiste !== undefined ? emailExiste : {});
     if (emailExiste) {
       setEmailAdressError("taken");
     }
@@ -251,7 +253,8 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
         :""}
 
         {activeStep === "number" ?
-        <div>
+        <div className='form_large'>
+          <h2>Phone number !</h2>
           <label htmlFor="userNumber" className={numberError ? "d-flex mb-1 mt-4 text-danger" : "d-flex mb-1 mt-4"}>Votre numéro de telephone</label>
           <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"} type="number" id="userNumber" name="userNumber" value={userNumber} onChange={validatePhoneNumber} placeholder='Votre numero de telephone' /> 
         </div>
@@ -269,20 +272,17 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
         
         {activeStep === "userType" ?
         <div className="row">
-          <div className="col-md-6 col-lg-4 p-2">
-              {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
+          {/* <div className="col-md-6 col-lg-4 p-2">
               <div className={
                 userType === "normal" && darkMode ? "p-4  bg-primary checkType" :
                 userType === "normal" && !darkMode ? "p-4 bg-dark text-light checkType" :
                 userType !== "normal" && darkMode ? "p-4 dark_object checkType" 
                 : "p-4 bg-white checkType"} onClick={() => hendleTypeUser("normal")}>
                 <aside className="d-flex justify-content-center align-items-center">
-                  {/* <i className="icon-money text-danger p-2"></i> */}
                   <h4>I want to create a normal account</h4>
                 </aside>
-                {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("normal")}>Create a normal account</Link> */}
               </div>
-          </div>
+          </div> */}
           <div className="col-md-6 col-lg-4 p-2">
             {/* <p className={darkMode ? "text-light p-2" : "text-dark p-2"}>Send your money from where you are to anyone accross us. </p> */}
             <div className={
@@ -292,7 +292,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
               : "p-4 bg-white checkType"} onClick={() => hendleTypeUser("university")}>
               <aside className="d-flex justify-content-center align-items-center">
                 {/* <i className="icon-money text-danger p-2"></i> */}
-                <h4>I'm an administrator on my university</h4>
+                <h4>Je suis un administrateur pour mon université.</h4>
               </aside>
               {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("university")}>Create a administrator's account</Link> */}
             </div>
@@ -307,7 +307,7 @@ const UserForm = ( {darkMode, setActiveContent, etats, setEtats, allDatas, setAl
               : "p-4 bg-white checkType"} onClick={() => hendleTypeUser("student")}>
               <aside className="d-flex justify-content-center align-items-center">
                 {/* <i className="icon-money text-danger p-2"></i> */}
-                <h4>I'm an student at the university</h4>
+                <h4>Je suis un étudiant dans mon université.</h4>
               </aside>
               {/* <Link className="btn btn-outline-info" to="#" onClick={() => setUserType("student")}>Create a student's account</Link> */}
             </div>

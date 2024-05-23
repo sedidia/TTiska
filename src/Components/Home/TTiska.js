@@ -25,6 +25,8 @@ import ProgramSemestersCourses from "../Ttime/Appariteur/ProgramSemestersCourses
 // notif
 import Swal from 'sweetalert2';
 import CreateTime from "../Ttime/Teacher/CreateTime";
+import SaveResult from "../Cba/SaveResult";
+import ConsultResult from "../Cba/ConsultResult";
 
 
 const TTiska = () => {
@@ -125,6 +127,7 @@ const TTiska = () => {
         setActiveContent(data)
         setIsNavOpened(false);
     }
+    
     const handleLogout = () => {
         // disconnect the account
         setEtats({})
@@ -132,19 +135,26 @@ const TTiska = () => {
         // setActiveContent("Home")
     }
 
+    const openSocialMedia = (e, socialAccount) => {
+        e.preventDefault()
+        window.open(socialAccount, '_blank')
+        console.log("Link : "+socialAccount);
+    }
+
     return ( 
-        <div className={darkMode ? "bg-dark" : "bg-body-tertiary"}>
+        <div className={darkMode ? " bg-dark" : "lightBac"}>
             <div className={isNavOpened && darkMode ? "navHome active dark_object" : isNavOpened && !darkMode ? "navHome active bg-white" : !isNavOpened && darkMode ? "navHome dark_object" : "navHome bg-white"}>
 
                 {etats.isOnline ?
                 <div className="profilsLinks">
                     <div className="profil d-flex justify-content-start align-items-center">
                         <div className="avatar">
-                            <img src={urls.ines} alt="avatar" />
+                            {/* <img src={urls.ines} alt="avatar" /> */}
+                            <i className="icon-person text-info"></i>
                         </div>
                         <div className="texts p-2">
-                            <div className={darkMode ? "text-light" : "text-dark"}>@{etats.username}</div>
-                            <span className={darkMode ? "text-light" : "text-dark"}>{etats.userType}</span>
+                            <div className={darkMode ? "text-light d-flex" : "text-dark d-flex"}>@{etats.username}</div>
+                            <span className={darkMode ? "text-light" : "text-dark"}>Status : {etats.userType}</span>
                         </div>
                     </div>
                     <div className="mylinks">
@@ -155,9 +165,10 @@ const TTiska = () => {
                        {etats.userType === "university" ?
                             <div>
                                 <div className="linksGroup">
-                                    <Link to="/" className="myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" onClick={() => setActiveGroupContent("adminsMainsOperations")}>Se the mains operations</Link>
+                                    <Link to="/" className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} onClick={() => setActiveGroupContent("adminsMainsOperations")}>Time manager</Link>
                                     {activeGroupContent === "adminsMainsOperations" ?
                                     <div className="linksList">
+                                        <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("SaveCourses")}>Save courses</Link>
                                         <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("CreateSemester")}>Create semesters</Link>
                                         <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("SaveClasses")}>Save the Classes</Link>
                                         <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("SaveApparitor")}>Save apparitors</Link>
@@ -171,7 +182,7 @@ const TTiska = () => {
                         
                         {etats.userType === "doorman" ?
                             <div className="linksGroup">
-                                <Link to="/" className="myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" onClick={() => setActiveGroupContent("Ttime")}>Manage the schedul</Link>
+                                <Link to="/" className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} onClick={() => setActiveGroupContent("Ttime")}>Manage the schedul</Link>
                                 {activeGroupContent === "Ttime" ?
                                 <div className="linksList">
                                     <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("SaveCourses")}>Save your section's courses</Link>
@@ -184,11 +195,11 @@ const TTiska = () => {
                         : ""}
                         {etats.userType === "university" || etats.userType === "doorman" || etats.userType === "student" ?
                             <div className="linksGroup">
-                                <Link to="/" className="myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" onClick={() => setActiveGroupContent("The Cba")}>The Cba</Link>
+                                <Link to="/" className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} onClick={() => setActiveGroupContent("The Cba")}>The Cba</Link>
                                 {activeGroupContent === "The Cba" ?
                                 <div className="linksList">
-                                    <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("CbaExport")}>CbaView Export</Link>
-                                    <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("CbaView")}>CbaView res</Link>
+                                    <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("SaveResult")}>Save the result</Link>
+                                    <Link className={darkMode ? "myLink overLinkDark text-decoration-none d-flex flex-direction-column text-light" : "myLink overLinkLight text-decoration-none d-flex flex-direction-column text-dark"} to="#" onClick={() => hangeMoveContentPage("ConsultResult")}>Consult the result</Link>
                                 </div>                                
                                 :""}
                             </div>
@@ -342,13 +353,13 @@ const TTiska = () => {
                         :
                         ""
                         }
-                        {isSearching ?
+                        {/* {isSearching ?
                         <IsLoading ></IsLoading>
                         :
                         <div className={darkMode ? "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 bg-dark" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 bg-dark"} onClick={ () => ttiskaSync("Rechargement de données", "Great, toutes les données on été chargées avec succès") }>
                             <i className="icon-sync text-info"></i>
                         </div>
-                        }
+                        } */}
 
                         {darkMode ?
                         <div className={darkMode ? "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 bg-dark" : "search_btn_nav text-decoration-none d-flex justify-content-center align-items-center rounded p-3 bg-dark"} onClick={() => activeOrNotDarkMode("false")}>
@@ -391,7 +402,7 @@ const TTiska = () => {
                 {/* Navbar */}
 
                 {activeContent === "Home" ?
-                <Home handleSuccess={handleSuccess} hangeMoveContentPage={hangeMoveContentPage} etats={etats} goBooking={goBooking} setGoBooking={setGoBooking} handleWatchVideo={handleWatchVideo} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                <Home openSocialMedia={openSocialMedia} handleSuccess={handleSuccess} hangeMoveContentPage={hangeMoveContentPage} etats={etats} goBooking={goBooking} setGoBooking={setGoBooking} handleWatchVideo={handleWatchVideo} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 
                 // for the admin of the unniversity
                 : activeContent === "SaveApparitor" ?
@@ -417,6 +428,11 @@ const TTiska = () => {
                 : activeContent === "CreateTime" ?
                 <CreateTime handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
                 
+                : activeContent === "SaveResult" ?
+                <SaveResult handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                : activeContent === "ConsultResult" ?
+                <ConsultResult handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} hangeMoveContentPage={hangeMoveContentPage} etats={etats} darkMode={darkMode} setDarkMode={setDarkMode} activeContent={activeContent} setActiveContent={setActiveContent} />
+                
                 : activeContent === "Auth" ?
                 <Auth  handleSuccess={handleSuccess} allDatas={allDatas} setAllDatas={setAllDatas} setEtats={setEtats} etats={etats} darkMode={darkMode}  users={users} setUsers={setUsers} activeContent={activeContent} setActiveContent={setActiveContent} />
                 : activeContent === "Contact" ?
@@ -430,7 +446,7 @@ const TTiska = () => {
             </div>
             }
             
-            {/* <Footer darkMode={darkMode} setDarkMode={setDarkMode} /> */}
+            <Footer openSocialMedia={openSocialMedia} darkMode={darkMode} setDarkMode={setDarkMode} />
         </div>
     )
 }

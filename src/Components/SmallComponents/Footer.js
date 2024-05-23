@@ -2,38 +2,38 @@ import { Link } from "react-router-dom";
 import React, {  } from 'react';
 // import { FaFacebook, FaInstagram, FaLinkedin, FaGithub, FaGoogle, FaTwitter, FaYoutube } from 'react-icons/fa';
 
-const Footer = ( {seeMoreProvideProduct, setSeeMoreProvideProduct, darkMode, setDarkMode} ) => {
+const Footer = ( {openSocialMedia, seeMoreProvideProduct, setSeeMoreProvideProduct, darkMode, setDarkMode} ) => {
     
     return ( 
-        <div className="bg-dark footer mt-4">
+        <div className="bg-dark footer">
             
-            <footer className={darkMode ? "text-center text-lg-start bg-dark text-muted" : "text-center text-lg-start bg-body-tertiary text-muted"}>
+            <footer className={darkMode ? "text-center text-lg-start  text-muted" : "text-center text-lg-start text-muted"}>
                 <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
                     <div className="me-5 d-none d-lg-block">
-                        <span className={darkMode ? "text-light" : ""}>Get connected with us on social networks:</span>
+                        <span className={darkMode ? "text-light" : "text-light"}>Get connected with us on social networks:</span>
                     </div>
                     
                     <div>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-linkedin text-light" : "icon-linkedin text-dark"}></i>
+                        <Link to="" className="me-4 text-reset text-decoration-none" onClick={ (e) => openSocialMedia(e, "https://www.instagram.com/sedidia/") } >                            
+                            <i className={"icon-linkedin text-light"}></i>
                         </Link>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-facebook-f text-light" : "icon-facebook-f text-dark"}></i>
+                        <Link to="" className="me-4 text-reset text-decoration-none" onClick={ (e) => openSocialMedia(e, "https://www.instagram.com/sedidia/") } >                            
+                            <i className={"icon-facebook-f text-light"}></i>
                         </Link>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-google text-light" : "icon-google text-dark"}></i>
+                        <Link to="" className="me-4 text-reset text-decoration-none" onClick={ (e) => openSocialMedia(e, "https://www.instagram.com/sedidia/") } >                            
+                            <i className={"icon-google text-light"}></i>
                         </Link>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-instagram text-light" : "icon-instagram text-dark"}></i>
+                        <Link to="" className="me-4 text-reset text-decoration-none" onClick={ (e) => openSocialMedia(e, "https://www.instagram.com/sedidia/") } >                            
+                            <i className={"icon-instagram text-light"}></i>
                         </Link>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-twitter text-light" : "icon-twitter text-dark"}></i>
+                        <Link to="" className="me-4 text-reset text-decoration-none" onClick={ (e) => openSocialMedia(e, "https://www.instagram.com/sedidia/") } >                            
+                            <i className={"icon-twitter text-light"}></i>
                         </Link>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-youtube text-light" : "icon-youtube text-dark"}></i>
+                        <Link to="" className="me-4 text-reset text-decoration-none" onClick={ (e) => openSocialMedia(e, "https://www.instagram.com/sedidia/") } >                            
+                            <i className={"icon-youtube text-light"}></i>
                         </Link>
-                        <Link to="" className="me-4 text-reset text-decoration-none">                            
-                            <i className={darkMode ? "icon-github text-light" : "icon-github text-dark"}></i>
+                        <Link onClick={ (e) => openSocialMedia(e, "https://github.com/sedidia") } to="" className="me-4 text-reset text-decoration-none">                            
+                            <i className={"icon-github text-light"}></i>
                         </Link>
                     </div>
                 </section>
@@ -78,10 +78,10 @@ const Footer = ( {seeMoreProvideProduct, setSeeMoreProvideProduct, darkMode, set
                     </div>
                 </section>                 */}
 
-                <div className={darkMode ? "text-center p-4 bg-body-tertiary text-dark" : "footerback text-center p-4"}>                    
+                <div className={"d-flex justify-content-center align-items-center p-4 text-light"}>                    
                     © 2024 Copyright :
-                    <Link className="text-reset fw-bold d-flex justify-content-center align-items-center" to="/"> TTiska.com</Link>
-                    by Idris SEDIDIA
+                    <Link className="text-reset fw-bold d-flex justify-content-center align-items-center p-2" to="/"> TTiska.com</Link>
+                    {/* by Idris SEDIDIA */}
                 </div>
             </footer>
 

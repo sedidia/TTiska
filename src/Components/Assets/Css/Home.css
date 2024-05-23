@@ -36,11 +36,33 @@
 body{
     background: var(--bgbody);
 }
+
+.h100{
+    height: 50vh;
+}
+
 .search_component::-webkit-scrollbar,
 body::-webkit-scrollbar{
     width: 10px;
 }
 
+.bulletinScrollable{
+    width: 100%;
+    overflow-x: auto;
+}
+.lightBac{
+    background: rgb(245, 245, 245);
+}
+
+.ttiskaHeight{
+    width: 100%;
+    height: 100vh;
+}
+/* .form_large */
+.form_large{
+    width: 400px;
+}
+/* .form_large */
 .iconSorry{
     font-size: 100px;
 }
@@ -116,6 +138,7 @@ body::-webkit-scrollbar{
 /* .iWannaWatch */
 
 /* booking (room) */
+.selectANDconsult,
 .room{
     border-top: 1px solid black;
     position: absolute;
@@ -127,9 +150,14 @@ body::-webkit-scrollbar{
     position: fixed;
     transition: all .3s linear;
 }
+.selectANDconsult.active,
 .room.active{
     bottom: 0;
     position: fixed;
+}
+.selectANDconsult,
+.selectANDconsult.active{
+    width: 300px;
 }
 /* booking (room) */
 
@@ -484,17 +512,20 @@ video{
 .header .imgs .img{
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 800px;
     height: 800px;
     /* border-radius: 50%; */
     border-top-left-radius: 30%;
     border-bottom-left-radius: 30%;
+    transition: all .3s linear;
     overflow: hidden;
     position: absolute;
 }
 .header .imgs .img img{
-    align-self: start;
+    align-self: center;
     width: 100%;
+    /* height: 100%;  */
     transition: all .3s linear;
 }
 /* .header .imgs .img:first-child{
@@ -523,7 +554,7 @@ video{
 .header .dashs .dash{
     width: 30px;
     height: 30px;
-    /* background: rgba(0, 128, 0, 0.323); */
+    background: rgba(0, 128, 0, 0.055);
     position: absolute;
     transform: rotate(0deg);
 }
@@ -533,7 +564,7 @@ video{
     top: 30px;
     left: 300px;
     transform: rotate(0deg);
-    background: rgb(255, 214, 214);
+    background: rgb(109, 22, 22);
 }
 .header .dashs .dash:nth-child(2){
     width: 150px;
@@ -934,6 +965,9 @@ video{
 .profil .avatar img{
     width: 100%;
 }
+.profil .avatar i{
+    font-size: 50px;
+}
 /* profil */
 
 /* boites */
@@ -1143,6 +1177,10 @@ video{
         transform: rotate(10deg);
     }
     /* boites */
+
+    .form_large{
+        width: calc(100% - 0em);
+    }
 }
 /* media query */
 
@@ -1180,14 +1218,17 @@ input::placeholder{
     color: white;
 }
 
+
+
 .overCard{
-    padding-top: 2em;
-    padding-bottom: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding: .3em;
     transition: all .3s linear;
 }
 .overCard:hover{
-    padding-top: 1.2em;
-    padding-bottom: 2.8em;
+    padding-top: .0em;
+    padding-bottom: .6em;
 }
 .overCard div{
     border-radius: 2em;

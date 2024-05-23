@@ -9,6 +9,13 @@ import home from "../Assets/Imgs/home.jfif";
 import baccool from "../Assets/Imgs/baccool.jfif";
 import painCotudien from "../Assets/Imgs/pain.jpg";
 import pain_logo from "../Assets/Imgs/pain_logo.jpg";
+import numerique1 from "../Assets/Imgs/numerique1.jpg";
+import numerique2 from "../Assets/Imgs/numerique2.jpg";
+import numerique3 from "../Assets/Imgs/numerique3.jpg";
+import numerique from "../Assets/Imgs/numerique.jpg";
+
+import ttiska_light from "../Assets/Imgs/ttiska_light.png";
+import ttiska_dark from "../Assets/Imgs/ttiska_dark.png";
 
 import sauts from "../Assets/Videos/sauts.mp4";
 // import en_co1 from "../Assets/Videos/en_co1.mp4";
@@ -38,6 +45,8 @@ const ulrs = {
 
     // images
     game, contact, homePainCotidien, home, baccool, b2, ines, logo_univ, painCotudien, pain_logo,
+    numerique1, numerique2, numerique3, numerique,
+    ttiska_light, ttiska_dark,
     // videos
     sauts, 
     the_street_called_mercy, goodgrace_video,

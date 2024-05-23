@@ -132,9 +132,9 @@ const CreateSemesters = ( {darkMode, hangeMoveContentPage, activeContent, etats,
                                 <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="date" id="endDate" value={endDate} startDate="endDate" onChange={ (e) => handleChanges(e, "endDate") } placeholder="The endDate's startDate" required /> 
 
                                 <div className="d-flex mt-4">
-                                    <button className="btn btn-outline-info" onClick={handleAddUser}>Add</button>
+                                    <button className="btn btn-outline-info" onClick={handleAddUser}>Garder en memoire</button>
                                     {classes.length > 0 && startDate === "" && endDate === ""?
-                                    <button className="btn btn-outline-info" onClick={handleSendData}>Send</button>
+                                    <button className="btn btn-outline-info" onClick={handleSendData}>Terminer</button>
                                     :""}
                                 </div>
                             </form>

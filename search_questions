@@ -1,0 +1,25 @@
+j'ai le tableau d'objets "
+[
+    {
+                "Noms": "KAYAMBA KASONGO IDRIS",
+                "annee": 2024,
+                "promotion": "m1",
+                "systeme": "LMD",
+                "faculte": "sciences",
+                "filiere": "informatique",
+                "departement": "math-info",
+                "u1_c5_informatique": 16,
+                "u1_c5_mathematique": 15,
+                "u2_c4_anglais": 15,
+                "credits": 60,
+                "complements": 0,
+                "complements_valides": 0,
+                "moyenne_ponderee": "14",
+                "credits_valides": 60,
+                "echecs": 0,
+                "decision_jury": "PS",
+    }
+]
+" 
+
+        ecrire une methode reactjs qui bouble sur chaque objet et modifie toutes les colonnes qui commencent par le premier caractère 'u' le dexieème 'un chifre' le troisième '_' le quatrième 'c' le cinquième '_' le sixième 'un chiffre' et le reste des caractères le nom du cours. chaque object du tableau d'objets devra ressembler à ceci : 

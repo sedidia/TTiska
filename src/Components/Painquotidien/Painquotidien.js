@@ -73,7 +73,6 @@ const Painquotidien = () => {
 
             </div>
 
-
             <img src={urls.pain_logo} alt="pain logo" className="logo_pain2" />
             <h4 className={"pt-4 mt-4"}>||||| Notre mission</h4>
             <div className="container mb-4">
@@ -92,10 +91,10 @@ const Painquotidien = () => {
                                 <aside className="d-flex justify-content-center align-items-center">
                                     {/* <h4>Voulez-vous discuter avec un groupe des jeunes pour christ ?</h4> */}
                                 </aside>
-                                <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4">                            
+                                <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4" onClick={ (e) => window.open("https://whatsapp.com/channel/0029Va9ysjG1t90fQZPgso2n", '_blank') }>                            
                                         <i className={"icon-whatsapp"}></i>
                                 </Link>
-                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#">» Join us on whatsapp</Link>
+                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#" onClick={ (e) => window.open("https://whatsapp.com/channel/0029Va9ysjG1t90fQZPgso2n", '_blank') }>» Join us on whatsapp</Link>
                             </div>
                         </div>
                     </div>
@@ -108,10 +107,10 @@ const Painquotidien = () => {
                                 <aside className="d-flex justify-content-center align-items-center">
                                     {/* <h4>Voulez-vous discuter avec un groupe des jeunes pour christ ?</h4> */}
                                 </aside>
-                                <Link to="" className="btn btn-danger text-light me-4  text-decoration-none mt-4">                            
+                                <Link to="" className="btn btn-danger text-light me-4  text-decoration-none mt-4" onClick={ (e) => window.open("https://www.instagram.com/_pain_quotidien?igsh=dWcydGloeDF5YnBv", '_blank') }>                            
                                         <i className={"icon-whatsapp"}></i>
                                 </Link>
-                                <Link className="btn btn-outline-danger mp-4 mt-4" to="#">» Join us on Telegram</Link>
+                                <Link className="btn btn-outline-danger mp-4 mt-4" to="#" onClick={ (e) => window.open("https://www.instagram.com/_pain_quotidien?igsh=dWcydGloeDF5YnBv", '_blank') }>» Join us on Instagram</Link>
                             </div>
                         </div>
                     </div>
@@ -123,58 +122,52 @@ const Painquotidien = () => {
                                 <aside className="d-flex justify-content-center align-items-center">
                                     {/* <h4>Voulez-vous discuter avec un groupe des jeunes pour christ ?</h4> */}
                                 </aside>
-                                <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4">                            
+                                <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4"  onClick={ (e) => window.open("https://facebook.com/pain.quotidie", '_blank') }>                            
                                         <i className={"icon-whatsapp"}></i>
                                 </Link>
-                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#">» Join us on Telegram</Link>
+                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#"  onClick={ (e) => window.open("https://facebook.com/pain.quotidie", '_blank') }>» Join us on Facebook</Link>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6 col-lg-4 p-2">                        
                         <div className="p-4 rounded  alert alert-primary">
-                            <h4 className="p-4">Whatch videos we share on our LinkedIn</h4>
+                            <h4 className="p-4">Whatch videos we share on our Telegram</h4>
                             <p>"Preche la parole, insiste en toute occasion, favorable ou non, reprends, censure, exhorte, avec toutedouceur et en instruisant."</p>
                             <div>
                                 <aside className="d-flex justify-content-center align-items-center">
                                     {/* <h4>Voulez-vous discuter avec un groupe des jeunes pour christ ?</h4> */}
                                 </aside>
-                                <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4">                            
+                                <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4" onClick={ (e) => window.open("https://t.me/pain_quotidien", '_blank') }>                            
                                         <i className={"icon-whatsapp"}></i>
                                 </Link>
-                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#">» Join us on Telegram</Link>
+                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#" onClick={ (e) => window.open("https://t.me/pain_quotidien", '_blank') }>» Join us on Telegram</Link>
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6 col-lg-4 p-2">                        
+                    {/* <div className="col-md-6 col-lg-4 p-2">                        
                         <div className="p-4 rounded  alert alert-primary">
                             <h4 className="p-4">Whatch videos we share on our Twitter</h4>
                             <p>"Preche la parole, insiste en toute occasion, favorable ou non, reprends, censure, exhorte, avec toutedouceur et en instruisant."</p>
                             <div>
-                                <aside className="d-flex justify-content-center align-items-center">
-                                    {/* <h4>Voulez-vous discuter avec un groupe des jeunes pour christ ?</h4> */}
-                                </aside>
                                 <Link to="" className="btn btn-primary text-light me-4  text-decoration-none mt-4">                            
                                         <i className={"icon-whatsapp"}></i>
                                 </Link>
-                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#">» Join us on Telegram</Link>
+                                <Link className="btn btn-outline-primary mp-4 mt-4" to="#" >» Join us on Twitter</Link>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-md-6 col-lg-4 p-2">                        
+                    </div> */}
+                    {/* <div className="col-md-6 col-lg-4 p-2">                        
                         <div className="p-4 rounded  alert alert-danger">
                             <h4 className="p-4">Whatch videos we share on our Youtube</h4>
                             <p>"Preche la parole, insiste en toute occasion, favorable ou non, reprends, censure, exhorte, avec toutedouceur et en instruisant."</p>
                             <div>
-                                <aside className="d-flex justify-content-center align-items-center">
-                                    {/* <h4>Voulez-vous discuter avec un groupe des jeunes pour christ ?</h4> */}
-                                </aside>
                                 <Link to="" className="btn btn-danger text-light me-4  text-decoration-none mt-4">                            
                                         <i className={"icon-whatsapp"}></i>
                                 </Link>
-                                <Link className="btn btn-outline-danger mp-4 mt-4" to="#">» Join us on Telegram</Link>
+                                <Link className="btn btn-outline-danger mp-4 mt-4" to="#">» Join us on Youtube</Link>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             

@@ -22,6 +22,8 @@ import Authent from './Components/SmallComponents/LoginRegister';
 import Copie from './Components/Copie/Copie';
 import SaveCourses from './Components/Ttime/Admin/SaveCourses';
 import Painquotidien from './Components/Painquotidien/Painquotidien';
+import SaveResult from './Components/Cba/SaveResult';
+import ConsultResult from './Components/Cba/ConsultResult';
 
 function App() {
   return (
@@ -42,9 +44,15 @@ function App() {
             {/* teste */}
 
             {/* Cba solution */}
-            <Route exact path={'/Cba'}>
-              <HomeUniv />
+            <Route exact path={'/SaveResult'}>
+              <SaveResult />
             </Route>
+            <Route exact path={'/ConsultResult'}>
+              <ConsultResult />
+            </Route>
+            {/* <Route exact path={'/Cba'}>
+              <HomeUniv />
+            </Route> */}
             <Route exact path={'/SendServer'}>
               <SendServer />
             </Route>

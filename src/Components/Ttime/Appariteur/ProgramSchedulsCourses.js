@@ -5,12 +5,18 @@ import urls from "../../Config/Config";
 import IsLoading from "../../SmallComponents/IsLoading";
 
 const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent, etats, allDatas, setAllDatas, handleSuccess} ) => {
+    const [nothing, setnothing] = useState("");
+
     const [selectedClass, setSelectedClass] = useState("");
     
     const [selectedSection, setSelectedSection] = useState("");
+
+    const [filiere_filtre, setfiliere_filtre] = useState("");
+    const [promotion_filtre, setpromotion_filtre] = useState("");
+
     const [foundedClasse, setFoundedClasse] = useState([]);
     const [sections, setSections] = useState([]);
-    const [updateClasse, setUpdateClasse] = useState([]);
+    const [updateSchedule, setUpdateSchedule] = useState([]);
     const [schedules, setSchedules] = useState([]);
     
     const [hideList, setHideList] = useState(false);
@@ -29,6 +35,7 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
     const [teacherName, setteacherName] = useState("")
     const [semester, setsemester] = useState("")
     const [activeDate, setactiveDate] = useState("")
+    const [coursId, setcoursId] = useState("")
 
     const [myActiveDate, setmyActiveDate] = useState("")
 
@@ -47,7 +54,7 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
         headers: {
             'Content-Type': 'application/json',
         },
-        // body: JSON.stringify(updateClasse),
+        // body: JSON.stringify(updateSchedule),
         })
         .then(response => response.json())
         .then(data => {
@@ -73,15 +80,16 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
         allDatas.users.filter(user => user.univId !== null).filter(user => user.univId === etats.univId).filter(user => user.userType === "doorman").length === 0 ? setSectionsEmpty(true) : setSectionsEmpty(false)
     }, [])
     
-    const handleSendClasses = () => {
+    const handleSendSchedule = () => {
         setIsSearching(true)
-        if (updateClasse.length > 0) {
-            fetch(`${urls.urlApi}/saveClasses`, {
+        console.log(schedules.length);
+        if (schedules.length > 0) {
+            fetch(`${urls.urlApi}/saveSchedule`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updateClasse),
+                body: JSON.stringify(schedules),
             })
             .then(response => response.json())
             .then(data => {
@@ -100,19 +108,23 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
     const handleChanges = (e, title) => {
         setHideList(false)
         title === "cours" ? setCours(e) :
-        title === "classe" ? setSelectedClass(e.target.value) :
-        title === "activeDate" ? setactiveDate(""+e.target.value+" : "+startTime+" - "+endTime+"") :
-        title === "startTime" ? setactiveDate(""+myActiveDate+" : "+e.target.value+" - "+endTime+"") :
-        title === "endTime" ? setactiveDate(""+myActiveDate+" : "+startTime+" - "+e.target.value+"") :
-        console.log("non title info")
-        // if(title === "activeDate" || title === "startTime" || title === "endTime"){
-        //     setactiveDate(""+myActiveDate+" : "+startTime+" - "+endTime+"")
-        // }
+        title === "classe" ? setclassName(e.target.value) :
+        // title === "classe2" ? setclassName(e) :
+        title === "activeDate" ? setactiveDate(e.target.value) :
+        title === "startTime" ? setstartTime(e.target.value) :
+        title === "endTime" ? setendTime(e.target.value) :
+        setnothing("sorry");
+
+        title === "startTime" || title === "endTime" ? setdates(
+            (title === "startTime" ? e.target.value+" - "+endTime : startTime+" - "+e.target.value)
+        ) : setnothing("sorry");
+
+        console.log(dates);
     }
     const selectCours = (data) => {
         setHideList(true)
         handleChanges(data.cours, "cours")
-        handleChanges(data.className, "classe")
+        // handleChanges(data.className, "classe2")
         setdates(data.dates)
         setsection(data.section)
         setfiliere(data.filiere)
@@ -123,24 +135,44 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
         // setactiveDate(data.activeDate)
         setclassId(data._id)
         setunivId(data.univId)
+        setcoursId(data._id)
     }
+
+    // improve tests on this place
     const addSchedule = () => {
-        const newCours = { 
-            cours,
-            section,
-            filiere,
-            promotion,
-            teacherNumber,
-            teacherName,
-            semester,
-            activeDate,
-            dates,
-            classId,
-            className,
-            univId,
+        console.log(
+            endTime
+        );
+        const myRes = allDatas.schedules
+        .filter(item => item.className === className)
+        .filter(item => item.activeDate === activeDate)
+        .filter(item => item.dates === ""+startTime+" - "+endTime+"")
+        if(myRes.length > 0){
+
+            handleSuccess("Erreur survenue", "L'ajout a échoué car un cours a été aligné pour cette journée et à cette heure !")
+        }else{
+            // console.log(allDatas.schedules);
+            const newCours = { 
+                coursId,
+                cours,
+                section,
+                filiere,
+                promotion,
+                teacherNumber,
+                teacherName,
+                semester,
+                activeDate,
+                dates,
+                classId,
+                className,
+                univId,
+            };
             
-        };
-        setSchedules([...schedules, newCours]); 
+            setSchedules([...schedules, newCours]);
+            handleSuccess("Ajout", "L'alignement d'un cours éffectué avec succès !")
+        }
+
+
     }
     const handleConfirmeSchedule = () => {
         console.log(schedules);
@@ -151,12 +183,59 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
         <div className={darkMode ? "container d-flex justify-content-center mt-4 text-light" : "container d-flex justify-content-center mt-4"}>
             <div>
                 <div className="row p-3">
+                    <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
+                        <div>
+                            <h5 className="d-flex">La liste des Cours</h5>
+                            <div className="d-flex">
+                                <div className="p-2">
+                                    <label htmlFor="filiere_filtre" className={"d-flex justify-content-between mt-4 mb-1"}>filiere</label>
+                                    <select name="filiere_filtre" value={filiere_filtre} onChange={ (e) => setfiliere_filtre(e.target.value) } className="form-control">
+                                        <option value={""}>Veillez choisir une filiere</option>
+                                        {
+                                        allDatas.courses
+                                        .filter(cours => cours.univId === etats.univId)
+                                        .filter(c => c.cours.includes(cours))
+                                        .map(myCourse => (
+                                            <option key={myCourse._id} value={myCourse.filiere}>{myCourse.filiere}</option>
+                                        ))
+                                        }
+                                    </select>
+                                </div>
+                                <div className="p-2">
+                                    <label htmlFor="promotion_filtre" className={"d-flex justify-content-between mt-4 mb-1"}>Promotion</label>
+                                    <select name="promotion_filtre" value={promotion_filtre} onChange={ (e) => setpromotion_filtre(e.target.value) } className="form-control">
+                                        <option value={""}>Veillez choisir une promotion</option>
+                                        {
+                                        allDatas.courses
+                                        .filter(cours => cours.univId === etats.univId)
+                                        .filter(c => c.cours.includes(cours))
+                                        .map(myCourse => (
+                                            <option key={myCourse._id} value={myCourse.promotion}>{myCourse.promotion}</option>
+                                        ))
+                                        }
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            {
+                            allDatas.courses
+                            .filter(cours => cours.univId === etats.univId)
+                            .filter(cours => cours.filiere === filiere_filtre)
+                            .filter(cours => cours.promotion === promotion_filtre)
+                            .map(myCourse => (
+                                <p key={myCourse._id} className="d-flex p-2">{myCourse.cours} aligné {myCourse.activeDate}</p>
+                            ))
+                            }
+                            
+                        </div>
+                    </div>
+
                     {!classesEmpty && !sectionsEmpty ?
                     <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
                         <p>Veillez écrire les noms de la classe et de la section à la main pour une meillere confirmation !</p>
                         <form className="was-validated">
-                            <label htmlFor="selectedClass" className={"d-flex justify-content-between mt-4 mb-1"}>Veillez selectionner une classe</label>
-                            <select name="selectedClass" value={selectedClass} onChange={ (e) => handleChanges(e, "classe") } className="form-control">
+                            <label htmlFor="className" className={"d-flex justify-content-between mt-4 mb-1"}>Veillez selectionner une classe</label>
+                            <select name="className" value={className} onChange={ (e) => handleChanges(e, "classe") } className="form-control">
                                 <option value={""}>Veillez choisir une classe</option>
                                 {allDatas.classes
                                 .filter(univ => univ.univId === etats.univId)
@@ -184,25 +263,19 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
 
                             <label htmlFor="activeDate" className={"d-flex justify-content-between mt-4 mb-1"}>Veillez selectionner une date</label>
                             <input className={darkMode ? "bg-dark form-control text-light" : "bg-light form-control text-dark"}  type="date" id="activeDate" value={activeDate} name="activeDate" onChange={ (e) => handleChanges(e, "activeDate") } placeholder="La date" required /> 
-                                
+                               
                             <div className="d-flex justify-content-between">
-                                <div className="m-4">
-                                    de
-                                </div>
                                 <input className={darkMode ? "m-4 bg-dark form-control text-light" : "m-4 bg-light form-control text-dark"}  type="time" id="startTime" value={startTime} name="startTime" onChange={ (e) => handleChanges(e, "startTime") } placeholder="L'heure de debut" required /> 
-                                <div className="m-4">
-                                    à
-                                </div>
                                 <input className={darkMode ? "m-4 bg-dark form-control text-light" : "m-4 bg-light form-control text-dark"}  type="time" id="endTime" value={endTime} name="endTime" onChange={ (e) => handleChanges(e, "endTime") } placeholder="L'heure de fin" required /> 
                                
                             </div>
 
-                            {activeDate !== "" && cours !== "" && selectedClass !== "" && startTime !== "" && endTime !== ""?
+                            {activeDate !== "" && cours !== "" && className !== "" && startTime !== "" && endTime !== "" && startTime < endTime ?
                             <Link to="" onClick={ addSchedule } className="btn btn-outline-info">Ajouter.</Link>
                             :""}
-                            {schedules.length > 0 ?
+                            {/* {schedules.length > 0 ?
                             <Link to="" onClick={ handleConfirmeSchedule } className="btn btn-outline-info">Confirmer la programmation.</Link>
-                            :""}
+                            :""} */}
                         </form>
                         
                         
@@ -233,16 +306,19 @@ const ProgramSchedulesCourses = ( {darkMode, hangeMoveContentPage, activeContent
                     </div>
                     }
 
+                    
+
                     {!classesEmpty && !sectionsEmpty ?
                     <div className={darkMode ? "dark_object rounded p-4 card-body pt-3 col-md-12 col-lg-6" : "bg-white rounded p-4 card-body pt-3 col-md-12 col-lg-6"}>
-                        {classeExist && sectionExist && selectedClass !== "" && selectedSection !== "" ?
+                        {schedules.length > 0 ?
                         <div>
                             <h5>Selection</h5>
                             <h5 className="iconSorry">✔</h5>
-                            <div className="">Selon votre selection, la salle {selectedClass} sera attribuée à <br/> la section {selectedSection}</div>
+                            {/* <div className="">Selon votre selection, la salle {selectedClass} sera attribuée à <br/> la section {selectedSection}</div> */}
+                            <div className="">{schedules.length} cours {schedules.length === 1 ? "a":"ont" } été préparé{schedules.length === 1 ? "":"s" } pour etre aligné{schedules.length === 1 ? "":"s" } </div>
                             {isSearching ?
                             <IsLoading darkMode={darkMode} /> :
-                            <Link onClick={handleSendClasses} to="" className="btn btn-primary mt-4"><i className="icon-sync"></i> Confirmer L'attribution</Link>
+                            <Link onClick={handleSendSchedule} to="" className="btn btn-primary mt-4"><i className="icon-sync"></i> Confirmer la programmation</Link>
                             }
                         </div>
                         :

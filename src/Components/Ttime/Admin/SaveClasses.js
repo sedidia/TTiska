@@ -98,10 +98,10 @@ const SaveClasses = ( {darkMode, hangeMoveContentPage, activeContent, etats, han
                             
                             <div className="d-flex mt-4">
                                 {existClass === 0 ?
-                                <button className="btn btn-outline-info" onClick={handleAddUser}>Add</button>
+                                <button className="btn btn-outline-info" onClick={handleAddUser}>Ajouter à la liste</button>
                                 :""}
                                 {classes.length > 0 && name === "" ?
-                                <button className="btn btn-outline-info" onClick={handleSendData}>Send</button>
+                                <button className="btn btn-outline-info" onClick={handleSendData}>Terminer</button>
                                 :""}
                             </div>
 
